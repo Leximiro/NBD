@@ -14,6 +14,10 @@ public class Schedule {
 	private Classroom classroom;
 	private ClassType classType;
 	
+	private int weekNumber;
+	
+	public Schedule() {}
+	
 	public Schedule(int id, int year, String group) {
 		this.id = id;
 		this.year = year;
@@ -115,6 +119,14 @@ public class Schedule {
 		this.classType = classType;
 	}
 	
+	public int getWeekNumber() {
+		return weekNumber;
+	}
+
+	public void setWeekNumber(int weekNumber) {
+		this.weekNumber = weekNumber;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

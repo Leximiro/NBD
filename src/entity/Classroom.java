@@ -10,9 +10,21 @@ public class Classroom {
 	private boolean projector;
 	private boolean board;
 	
+	public Classroom() {}
+	
 	public Classroom(int id, int building, String number, int capacity, boolean computers, boolean projector,
 			boolean board) {
 		this.id = id;
+		this.building = building;
+		this.number = number;
+		this.capacity = capacity;
+		this.computers = computers;
+		this.projector = projector;
+		this.board = board;
+	}
+	
+	public Classroom(int building, String number, int capacity, boolean computers, boolean projector,
+			boolean board) {
 		this.building = building;
 		this.number = number;
 		this.capacity = capacity;

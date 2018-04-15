@@ -15,6 +15,8 @@ public class Finals {
 	private Classroom classroom;
 	private Period period;
 	
+	public Finals() {}
+	
 	public Finals(int id, String type, Date date, int year) {
 		this.id = id;
 		this.type = type;

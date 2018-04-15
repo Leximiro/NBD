@@ -9,6 +9,8 @@ public class Week {
 	private Date startDate;
 	private Date endDate;
 	
+	public Week() {}
+	
 	public Week(int id, int number) {
 		this.id = id;
 		this.number = number;

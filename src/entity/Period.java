@@ -5,6 +5,8 @@ public class Period {
 	private int id;
 	private int number;
 	
+	public Period() {}
+	
 	public Period(int id, int number) {
 		this.id = id;
 		this.number = number;

@@ -6,6 +6,8 @@ public class ScheduleWeek {
 	private Schedule schedule;
 	private Week week;
 	
+	public ScheduleWeek() {}
+	
 	public ScheduleWeek(int id, Schedule schedule, Week week) {
 		this.id = id;
 		this.schedule = schedule;

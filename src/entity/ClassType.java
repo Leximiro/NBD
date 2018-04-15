@@ -5,6 +5,8 @@ public class ClassType {
 	private int id;
 	private String name;
 	
+	public ClassType() {}
+	
 	public ClassType(int id, String name) {
 		this.id = id;
 		this.name = name;

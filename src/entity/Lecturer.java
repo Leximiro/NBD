@@ -6,6 +6,8 @@ public class Lecturer {
 	private String name;
 	private String degree;
 	
+	public Lecturer() {}
+	
 	public Lecturer(int id, String name, String degree) {
 		this.id = id;
 		this.name = name;
