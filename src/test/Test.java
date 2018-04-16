@@ -15,7 +15,7 @@ public class Test {
 	public static void main(String[] args){
 		
 //		try {
-//			ExcelParser.parse("D:\\06_programming\\workspace\\eclipse\\NBD-master\\МП КН -1 весна 17-18н.р.Microsoft Office Excel.xlsx");
+//			ExcelParser.parse("D:\\06_programming\\workspace\\eclipse\\NBD-master\\пїЅпїЅ пїЅпїЅ -1 пїЅпїЅпїЅпїЅпїЅ 17-18пїЅ.пїЅ.Microsoft Office Excel.xlsx");
 //		} catch (IOException | InvalidInputFileException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
@@ -27,6 +27,8 @@ public class Test {
 // DB queries tests
 		DBQueriesImpl db = new DBQueriesImpl();
 		db.getScheduleErrors();
+
+		System.out.println(db.getScheduleErrors());
 	}
 
 }

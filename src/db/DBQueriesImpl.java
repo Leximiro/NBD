@@ -885,6 +885,27 @@ public class DBQueriesImpl implements DBQueries {
         }
         return schedules;
 	}
+	@Override
+	public ArrayList<Day> getAllDays(){
+		ArrayList<Day> days = new ArrayList<>();
+		ResultSet res = null;
+		try {
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM day_name");
+			res = pst.executeQuery();
+			while (res.next()) {
+				Day day = new Day();
+				day.setId(res.getInt(1));
+				day.setName(res.getString(2));
+				days.add(day);
+			}
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return days;
+	}
 
 }
 
@@ -892,7 +913,7 @@ class DBConnector{
 
 	private static final String url = "jdbc:mysql://den1.mysql1.gear.host/nbd";
 	private static final String user = "nbd";
-	private static final String password = "password";
+	private static final String password = "Ls76xn_QaO!O";
 	private static Connection con = null;
 	private static Properties properties = new Properties();
 

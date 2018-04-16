@@ -69,4 +69,5 @@ public interface DBQueries {
 
 	ArrayList<Schedule> getScheduleErrors();
 
+	ArrayList<Day> getAllDays();
 }
