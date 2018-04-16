@@ -5,8 +5,9 @@ import entity.Schedule;
 
 import java.util.ArrayList;
 
-public class LecturerTable {
-    private String day;
+public class StudentTable {
+
+    private String lesson;
     private String lesson1;
     private String lesson2;
     private String lesson3;
@@ -16,8 +17,8 @@ public class LecturerTable {
     private String lesson7;
 
 
-    public  LecturerTable(Day day, ArrayList<Schedule> schedule){
-        this.day = day.getName();
+    public  StudentTable(Day day, ArrayList<Schedule> schedule){
+        this.lesson = day.getName();
         for (Schedule sced: schedule) {
             int number = sced.getPeriod().getNumber();
             switch(number){
@@ -37,15 +38,15 @@ public class LecturerTable {
     }
 
     private String lessonToString(Schedule schedule){
-        String lesson = "Тижні: "+schedule.getWeekNumber()+"\nПредмет: "+schedule.getDiscipline().getName()+"\nГрупа: "+schedule.getGroup()+"\nАудиторія: "+schedule.getClassroom().getNumber()+"\nСпеціальність:\n"+schedule.getSpecialization().getName();
+        String lesson = "Тижні: "+schedule.getWeekNumber()+"\nПредмет: "+schedule.getDiscipline().getName()+"\nГрупа: "+schedule.getGroup()+"\nАудиторія: "+schedule.getClassroom().getNumber()+"\nВикладач:\n"+schedule.getLecturer().getName();
 
 
 
         return lesson;
     }
 
-    public String getDay() {
-        return day;
+    public String getLesson() {
+        return lesson;
     }
 
     public String getLesson1() {
@@ -78,9 +79,6 @@ public class LecturerTable {
 
     @Override
     public String toString() {
-        return "Lecturer [day=" + day + ", lesson1=" + lesson1 + ", lesson2=" + lesson2 +", lesson3=" + lesson3 +", lesson4=" + lesson4 +", lesson5=" + lesson5 +", lesson6=" + lesson6 + ", lesson7=" + lesson7 +"]";
+        return "Lecturer [day=" + lesson + ", lesson1=" + lesson1 + ", lesson2=" + lesson2 +", lesson3=" + lesson3 +", lesson4=" + lesson4 +", lesson5=" + lesson5 +", lesson6=" + lesson6 + ", lesson7=" + lesson7 +"]";
     }
-
-
-
 }

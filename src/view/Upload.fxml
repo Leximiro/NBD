@@ -8,7 +8,6 @@
 
 <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="603.0" prefWidth="1133.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.UploadController">
   <children>
-    <Button fx:id="uploadButton" layoutX="23.0" layoutY="21.0" mnemonicParsing="false" onAction="#uploadSchedule" text="Завантажити файли" />
     <TableView fx:id="tableErrors" layoutX="14.0" layoutY="78.0" prefHeight="389.0" prefWidth="1096.0">
       <columns>
         <TableColumn prefWidth="75.0" text="Id" fx:id="idError" />
@@ -21,10 +20,15 @@
         <TableColumn prefWidth="75.0" text="Період" fx:id="periodError" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="74.0" text="Аудиторія" fx:id="classroomError" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="119.0" text="Тип аудиторії" fx:id="classTypeError" />
-        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="106.0" text="Тижні" fx:id="weekNumberErrors"/>
+        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="106.0" text="Тижні" fx:id="weekNumberErrors" />
       </columns>
     </TableView>
-    <Button id="deleteSchedule" fx:id="deleteButton" layoutX="23.0" layoutY="42.0" mnemonicParsing="false" onAction="#deleteSchedule" prefWidth="129.0" text="Видалити" />
-    <Button fx:id="checkButton" layoutX="152.0" layoutY="21.0" mnemonicParsing="false" onAction="#checkSchedule" prefWidth="96.0" text="Перевірити" />
+    <ToolBar layoutX="0.0" layoutY="0.0" prefWidth="1133.0">
+      <items>
+        <Button fx:id="uploadButton" mnemonicParsing="false" onAction="#uploadSchedule" text="Завантажити файли" />
+        <Button fx:id="checkButton" mnemonicParsing="false" onAction="#checkSchedule" prefWidth="96.0" text="Перевірити" />
+        <Button id="deleteSchedule" fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteSchedule" prefWidth="129.0" text="Видалити" />
+      </items>
+    </ToolBar>
   </children>
 </AnchorPane>

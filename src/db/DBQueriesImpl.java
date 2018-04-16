@@ -664,7 +664,7 @@ public class DBQueriesImpl implements DBQueries {
 		query.append((week==null) 			? 	"weeks_id = weeks_id AND " 			: 		"weeks_id = " 		+ week.getId()	   + " AND ");
 		query.append((specialization==null) ? 	"specialty_id = specialty_id AND " 	: 		"specialty_id = " 	+ specialization.getId() + " AND ");
 		query.append((course==null) 		? 	"course = course AND " 				: 		"course = " 		+ course + " AND ");
-		query.append((discipline==null) 	? 	"discipline_id = discipline_id" 	: 		"discipline_id = " 	+ discipline.getId() + " AND ");
+		query.append((discipline==null) 	? 	"discipline_id = discipline_id" 	: 		"discipline_id = " 	+ discipline.getId() );
 		
 		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 		ResultSet res = null;
@@ -716,7 +716,7 @@ public class DBQueriesImpl implements DBQueries {
 		query.append((board==null) 			? 	"board = board AND " 						: 		"board = " 				+ (board ? 1 : 0) + " AND ");
 		query.append((comps==null) 			? 	"computers = computers AND " 				: 		"computers = " 			+ (comps ? 1 : 0) + " AND ");
 		query.append((projector==null) 		? 	"projector = projector AND " 				: 		"projector = " 			+ (projector ? 1 : 0) + " AND ");
-		query.append((number==null) 		? 	"classroom._number = classroom._number" 	: 		"classroom._number = " 	+ number + " AND ");
+		query.append((number==null) 		? 	"classroom._number = classroom._number" 	: 		"classroom._number = " 	+ number );
 				
 		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 		ResultSet res = null;

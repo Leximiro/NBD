@@ -9,12 +9,21 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Button;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import parser.ExcelParser;
+import parser.InvalidInputFileException;
+import parser.ParserAlgorithmException;
 import table.UploadTable;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import static parser.ExcelParser.parse;
 
 public class UploadController {
     private ObservableList<UploadTable> scheduleErrors = FXCollections.observableArrayList();
@@ -106,8 +115,29 @@ public class UploadController {
 
 
 
-    public void uploadSchedule(javafx.event.ActionEvent actionEvent) {
-        //parser.parse(String path);
+    public void uploadSchedule(javafx.event.ActionEvent actionEvent) throws ParserAlgorithmException, IOException, InvalidInputFileException {
+        System.out.println("upload");
+        DirectoryChooser chooser = new DirectoryChooser();
+        File showDialog = chooser.showDialog(new Stage());
+        String path = showDialog.getPath();
+        System.out.println(path);
+        File folder = new File(path);
+        final String[] mask = {".xlsx"};
+        String[] fileNames = folder.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File folder, String name) {
+                for (String s : mask)
+                    if (name.toLowerCase().endsWith(s)) return true;
+                return false;
+            }
+        });
+
+        for(String fileName : fileNames){
+            System.out.println("File: "+fileName + " loaded;");
+            File curFile  = new File (path + "\\" + fileName);
+            String curFilePath = path + "\\" + fileName;
+            parse(curFilePath);
+        }
     }
 
     public void deleteSchedule(javafx.event.ActionEvent actionEvent) {

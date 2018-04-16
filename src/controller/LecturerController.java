@@ -98,18 +98,22 @@ public class LecturerController {
         queries = new DBQueriesImpl();
         ArrayList<Lecturer> lecturers = queries.getAllLecturers();
         ObservableList<String> lecturersFX = FXCollections.observableArrayList();
+        lecturersFX.add(null);
         for (Lecturer lecturer : lecturers) {
             lecturersFX.add(lecturer.getName());
         }
+
         lecturerNameChoice.setItems(lecturersFX);
         ArrayList<Week> weeks = queries.getAllWeeks();
         ObservableList<Integer> weeksFX = FXCollections.observableArrayList();
+        weeksFX.add(null);
         for (Week week : weeks) {
             weeksFX.add(week.getNumber());
         }
         weeksChoice.setItems(weeksFX);
         ArrayList<Specialization> specs = queries.getAllSpecializations();
         ObservableList<String> specFX = FXCollections.observableArrayList();
+        specFX.add(null);
         for (Specialization spec : specs) {
             specFX.add(spec.getName());
         }
@@ -117,6 +121,7 @@ public class LecturerController {
 
         ArrayList<Integer> courses = queries.getAllCourses();
         ObservableList<Integer> coursesFX = FXCollections.observableArrayList();
+        coursesFX.add(null);
         for (Integer course : courses) {
             coursesFX.add(course);
         }
@@ -124,6 +129,7 @@ public class LecturerController {
 
         ArrayList<Discipline> disciplines = queries.getAllDisciplines();
         ObservableList<String> disciplinesFX = FXCollections.observableArrayList();
+        disciplinesFX.add(null);
         for (Discipline discipline : disciplines) {
             disciplinesFX.add(discipline.getName());
         }
@@ -159,9 +165,9 @@ public class LecturerController {
     private HashMap<Day,ArrayList<Schedule>> initHashMap(){
         queries = new DBQueriesImpl();
         Lecturer lect = queries.getLecturerByName(lecturerNameChoice.getSelectionModel().getSelectedItem());
-        Week wee = new Week();
-        Specialization spec = new Specialization();
-        Discipline disp = new Discipline();
+        Week wee = null;
+        Specialization spec = null;
+        Discipline disp = null;
         Integer cours = null;
 
         try{
