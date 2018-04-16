@@ -27,8 +27,8 @@ public class Test {
 // DB queries tests
 		DBQueriesImpl db = new DBQueriesImpl();
 		db.getScheduleErrors();
-
-		System.out.println(db.getScheduleErrors());
+		System.out.println(db.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(null,null,null,null,null));
+		System.out.println(db.getScheduleByBuildingAndClassroomTypeAndClassroomNumber(null,null,null,null,null));
 	}
 
 }
