@@ -90,6 +90,7 @@ public class UploadController {
 
     private void initData() {
          try {
+             queries = new DBQueriesImpl();
              ArrayList<Schedule> schedules = queries.getScheduleErrors();
              for (Schedule sced : schedules) {
                  UploadTable tableUpload = new UploadTable(sced);
@@ -114,6 +115,7 @@ public class UploadController {
     }
 
     public void checkSchedule(javafx.event.ActionEvent actionEvent) {
+        queries = new DBQueriesImpl();
         scheduleErrors.removeAll();
         ArrayList<Schedule> schedules = queries.getScheduleErrors();
         for (Schedule sced: schedules) {

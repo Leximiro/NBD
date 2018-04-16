@@ -17,6 +17,50 @@ public class UploadTable {
     private int weekNumber;
 
 
+    public int getId() {
+        return id;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public String getDiscipline() {
+        return discipline;
+    }
+
+    public String getLecturer() {
+        return lecturer;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public String getPeriod() {
+        return period;
+    }
+
+    public String getClassroom() {
+        return classroom;
+    }
+
+    public String getClassType() {
+        return classType;
+    }
+
+    public int getWeekNumber() {
+        return weekNumber;
+    }
+
     public UploadTable(Schedule schedule){
         this.id = schedule.getId();
         this.year = schedule.getYear();
