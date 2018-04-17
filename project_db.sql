@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS finals CASCADE;
+п»їDROP TABLE IF EXISTS finals CASCADE;
 DROP TABLE IF EXISTS schedule_week CASCADE;
 DROP TABLE IF EXISTS schedule CASCADE;
 DROP TABLE IF EXISTS discipline CASCADE;
@@ -145,15 +145,15 @@ FOREIGN KEY (teacher_id) REFERENCES teacher(id)
 PRIMARY KEY (id)
 ) ENGINE=InnoDB CHARACTER SET=UTF8;
 
-INSERT INTO day_name(name) VALUES ("Понеділок");
-INSERT INTO day_name(name) VALUES ("Вівторок");
-INSERT INTO day_name(name) VALUES ("Середа");
-INSERT INTO day_name(name) VALUES ("Четвер");
-INSERT INTO day_name(name) VALUES ("П'ятниця");
-INSERT INTO day_name(name) VALUES ("Субота"); 
+INSERT INTO day_name(name) VALUES ("РџРѕРЅРµРґС–Р»РѕРє");
+INSERT INTO day_name(name) VALUES ("Р’С–РІС‚РѕСЂРѕРє");
+INSERT INTO day_name(name) VALUES ("РЎРµСЂРµРґР°");
+INSERT INTO day_name(name) VALUES ("Р§РµС‚РІРµСЂ");
+INSERT INTO day_name(name) VALUES ("Рџ'СЏС‚РЅРёС†СЏ");
+INSERT INTO day_name(name) VALUES ("РЎСѓР±РѕС‚Р°"); 
 
-INSERT INTO class_type(name) VALUES ("Лекція");
-INSERT INTO class_type(name) VALUES ("Практика"); 
+INSERT INTO class_type(name) VALUES ("Р›РµРєС†С–СЏ");
+INSERT INTO class_type(name) VALUES ("РџСЂР°РєС‚РёРєР°"); 
 
 INSERT INTO class_period(period) VALUES (1);
 INSERT INTO class_period(period) VALUES (2);
