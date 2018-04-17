@@ -117,6 +117,7 @@ public class UploadController {
 
     public void uploadSchedule(javafx.event.ActionEvent actionEvent) throws ParserAlgorithmException, IOException, InvalidInputFileException {
         System.out.println("upload");
+        queries = new DBQueriesImpl();
         DirectoryChooser chooser = new DirectoryChooser();
         File showDialog = chooser.showDialog(new Stage());
         String path = showDialog.getPath();
@@ -136,7 +137,7 @@ public class UploadController {
             System.out.println("File: "+fileName + " loaded;");
             File curFile  = new File (path + "\\" + fileName);
             String curFilePath = path + "\\" + fileName;
-            parse(curFilePath);
+            parse(curFilePath, queries);
         }
     }
 

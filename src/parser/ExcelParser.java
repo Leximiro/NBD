@@ -11,7 +11,8 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import db.DBImitation;
+import db.DBQueriesImpl;
+//import db.DBImitation;
 import entity.ClassType;
 import entity.Classroom;
 import entity.Day;
@@ -33,9 +34,7 @@ public class ExcelParser {
 
 	private static Random random = new Random();;
 	
-	public static void parse(String path) throws IOException, InvalidInputFileException, ParserAlgorithmException {
-		
-		DBImitation.init();
+	public static void parse(String path, DBQueriesImpl db) throws IOException, InvalidInputFileException, ParserAlgorithmException {
 		
 		FileInputStream file = new FileInputStream(new File(path));
 		             
@@ -45,10 +44,10 @@ public class ExcelParser {
 		
 		String name = getSpecialization(sheet.getRow(SPECIALIZATION_AND_COURSE_ROW)
 				.getCell(SPECIALIZATION_AND_COURSE_COLUMN).getStringCellValue());
-		Specialization specialization = DBImitation.getSpecializationByName(name);
+		Specialization specialization = db.getSpecializationByName(name);
 		if (specialization == null) {
 			specialization = new Specialization(random.nextInt(10000), name);
-			DBImitation.specializations.add(specialization);
+			db.addSpecialization(specialization);
 			//DB Insert
 		}
 		
@@ -74,8 +73,8 @@ public class ExcelParser {
 			
 			String dayCell = sheet.getRow(i).getCell(j).getStringCellValue();
 			if (!dayCell.equals("")) {
-				day = DBImitation.getDayByName(dayCell);
-				period = DBImitation.getPeriodByNumber(1);
+				day = db.getDayByName(dayCell);
+				period = new Period(1, 1);
 			} else if (day == null) {
 				throw new ParserAlgorithmException();
 			}
@@ -84,7 +83,7 @@ public class ExcelParser {
 				break main;
 				//throw new ParserAlgorithmException();
 			} else if (!sheet.getRow(i).getCell(j + 1).getStringCellValue().equals("")){
-				period = DBImitation.getPeriodByNumber(period.getNumber() + 1);
+				period = new Period(period.getNumber() + 1, period.getNumber() + 1);
 			}
 			
 			if ((sheet.getRow(i).getCell(j + 2) == null) || 
@@ -93,19 +92,19 @@ public class ExcelParser {
 				continue main;
 			}
 			String disciplineCell = sheet.getRow(i).getCell(j + 2).getStringCellValue();
-			discipline = DBImitation.getDisciplineByName(disciplineCell);
+			discipline = db.getDisciplineByName(disciplineCell);
 			if (discipline == null) {
 				discipline = new Discipline(random.nextInt(10000), disciplineCell);
-				DBImitation.disciplines.add(discipline);
+				db.addDiscipline(discipline);
 				//DB Insert
 			}
 			
 			String lecturerCell = sheet.getRow(i).getCell(j + 3).getStringCellValue();
-			lecturer = DBImitation.getLecturerByName(lecturerCell);
+			lecturer = db.getLecturerByName(lecturerCell);
 			if (lecturer == null) {
 				lecturer = new Lecturer(random.nextInt(10000), 
 						getLecturerName(lecturerCell), getLecturerDegree(lecturerCell));
-				DBImitation.lecturers.add(lecturer);
+				db.addLecturer(lecturer);
 				//DB Insert
 			}
 			
@@ -114,39 +113,32 @@ public class ExcelParser {
 			DataFormatter formatter = new DataFormatter(); 
 			Cell cell = sheet.getRow(i).getCell(j + 4);
 			String groupCell = formatter.formatCellValue(cell);
-			//String groupCell = sheet.getRow(i).getCell(j + 4).getStringCellValue();
-
-			classType = DBImitation.getClassTypeByName(groupCell);
-			if (classType == null) {
-				group = groupCell;
-				classType = DBImitation.getClassTypeByName("ïðàêòèêà");
-			}
 			
 			String weekCell = sheet.getRow(i).getCell(j + 5).getStringCellValue();
 			ArrayList<Integer> weeksNumbers = getWeeksNumbers(weekCell);
 			for (int w = 0; w < weeksNumbers.size(); w++) {
-				weeks.add(DBImitation.getWeekByNumber(w));
+				weeks.add(db.getWeekByNumber(w));
 			}
 			
 			String classroomCell = sheet.getRow(i).getCell(j + 6).getStringCellValue();
 			if (!classroomCell.equals("")) {
-				classroom = DBImitation.getClassroomByNumber(getClassroomNumber(classroomCell));
+				classroom = db.getClassroomByNumber(getClassroomNumber(classroomCell));
 			}
 			
 			Schedule schedule = new Schedule(random.nextInt(10000), year, 
-					classType.getName().equals("ëåêö³ÿ") ? null : group, specialization, discipline,
+					groupCell.equalsIgnoreCase("Ð»ÐµÐºÑ†Ñ–Ñ") ? null : groupCell, specialization, discipline,
 					lecturer, day, period, classroom, classType);
-			DBImitation.schedules.add(schedule);
+			db.addSchedule(schedule);
 			
 			for (int t = 0; t < weeks.size(); t++) {
 				ScheduleWeek scheduleWeek = new ScheduleWeek(random.nextInt(10000), schedule, weeks.get(t));
-				DBImitation.scheduleWeeks.add(scheduleWeek);
+				db.ScheduleWeek(scheduleWeek);
 			}
 			
 			i++;
 		}
 		
-		DBImitation.showSchedules();
+		//DBImitation.showSchedules();
 		
 		workbook.close();
 		
@@ -170,7 +162,7 @@ public class ExcelParser {
 	
 	private static String getLecturerName(String str) {
 		int i = 0;
-		while ((str.charAt(i) < 'À' || str.charAt(i) > 'ß')) {
+		while ((str.charAt(i) < 'Ð' || str.charAt(i) > 'Ð¯')) {
 			i++;
 		}
 		return str.substring(i, str.length());
@@ -178,7 +170,7 @@ public class ExcelParser {
 	
 	private static String getLecturerDegree(String str) {
 		int i = 0;
-		while ((str.charAt(i) < 'À' || str.charAt(i) > 'ß')) {
+		while ((str.charAt(i) < 'Ð' || str.charAt(i) > 'Ð¯')) {
 			i++;
 		}
 		return str.substring(0, i - 1);
