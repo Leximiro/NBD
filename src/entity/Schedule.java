@@ -39,6 +39,19 @@ public class Schedule {
 		this.classType = classType;
 	}
 
+	public Schedule(int year, String group, Specialization specialization, Discipline discipline,
+			Lecturer lecturer, Day day, Period period, Classroom classroom, ClassType classType) {
+		this.year = year;
+		this.group = group;
+		this.specialization = specialization;
+		this.discipline = discipline;
+		this.lecturer = lecturer;
+		this.day = day;
+		this.period = period;
+		this.classroom = classroom;
+		this.classType = classType;
+	}
+
 	public int getId() {
 		return id;
 	}

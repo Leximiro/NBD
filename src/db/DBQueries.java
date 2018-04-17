@@ -70,4 +70,6 @@ public interface DBQueries {
 	ArrayList<Schedule> getScheduleErrors();
 
 	ArrayList<Day> getAllDays();
+
+	void addClassroom(Classroom classroom);
 }

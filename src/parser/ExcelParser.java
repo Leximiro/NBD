@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -12,7 +11,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import db.DBQueriesImpl;
-//import db.DBImitation;
 import entity.ClassType;
 import entity.Classroom;
 import entity.Day;
@@ -31,8 +29,6 @@ public class ExcelParser {
 
 	private static final int DATA_START_ROW = 10;
 	private static final int DATA_START_COLUMN = 0;
-
-	private static Random random = new Random();;
 	
 	public static void parse(String path, DBQueriesImpl db) throws IOException, InvalidInputFileException, ParserAlgorithmException {
 		
@@ -46,7 +42,7 @@ public class ExcelParser {
 				.getCell(SPECIALIZATION_AND_COURSE_COLUMN).getStringCellValue());
 		Specialization specialization = db.getSpecializationByName(name);
 		if (specialization == null) {
-			specialization = new Specialization(random.nextInt(10000), name);
+			specialization = new Specialization(name);
 			db.addSpecialization(specialization);
 			//DB Insert
 		}
@@ -74,7 +70,7 @@ public class ExcelParser {
 			String dayCell = sheet.getRow(i).getCell(j).getStringCellValue();
 			if (!dayCell.equals("")) {
 				day = db.getDayByName(dayCell);
-				period = new Period(1, 1);
+				period = db.getPeriodByNumber(1);
 			} else if (day == null) {
 				throw new ParserAlgorithmException();
 			}
@@ -83,7 +79,7 @@ public class ExcelParser {
 				break main;
 				//throw new ParserAlgorithmException();
 			} else if (!sheet.getRow(i).getCell(j + 1).getStringCellValue().equals("")){
-				period = new Period(period.getNumber() + 1, period.getNumber() + 1);
+				period = db.getPeriodByNumber(period.getNumber() + 1);
 			}
 			
 			if ((sheet.getRow(i).getCell(j + 2) == null) || 
@@ -94,51 +90,54 @@ public class ExcelParser {
 			String disciplineCell = sheet.getRow(i).getCell(j + 2).getStringCellValue();
 			discipline = db.getDisciplineByName(disciplineCell);
 			if (discipline == null) {
-				discipline = new Discipline(random.nextInt(10000), disciplineCell);
+				discipline = new Discipline(disciplineCell);
 				db.addDiscipline(discipline);
-				//DB Insert
 			}
 			
 			String lecturerCell = sheet.getRow(i).getCell(j + 3).getStringCellValue();
 			lecturer = db.getLecturerByName(lecturerCell);
 			if (lecturer == null) {
-				lecturer = new Lecturer(random.nextInt(10000), 
-						getLecturerName(lecturerCell), getLecturerDegree(lecturerCell));
+				lecturer = new Lecturer(getLecturerName(lecturerCell), getLecturerDegree(lecturerCell));
 				db.addLecturer(lecturer);
-				//DB Insert
 			}
-			
-			String group = "";
 			
 			DataFormatter formatter = new DataFormatter(); 
 			Cell cell = sheet.getRow(i).getCell(j + 4);
 			String groupCell = formatter.formatCellValue(cell);
 			
+			classType = db.getClassTypeByName(groupCell.equalsIgnoreCase("лекція") ? "лекція" : "практика");
+			
 			String weekCell = sheet.getRow(i).getCell(j + 5).getStringCellValue();
 			ArrayList<Integer> weeksNumbers = getWeeksNumbers(weekCell);
 			for (int w = 0; w < weeksNumbers.size(); w++) {
-				weeks.add(db.getWeekByNumber(w));
+				Week week = db.getWeekByNumber(weeksNumbers.get(w));
+				weeks.add(week);
 			}
 			
 			String classroomCell = sheet.getRow(i).getCell(j + 6).getStringCellValue();
 			if (!classroomCell.equals("")) {
-				classroom = db.getClassroomByNumber(getClassroomNumber(classroomCell));
+				classroom = db.getClassroomByBuildingAndNumber(Integer.parseInt(classroomCell.substring(0, classroomCell.indexOf("-")).trim()), 
+						classroomCell.substring(classroomCell.indexOf("-") + 1, classroomCell.length()).trim());
+				if (classroom == null) {
+					classroom = new Classroom(Integer.parseInt(classroomCell.substring(0, classroomCell.indexOf("-")).trim()), 
+							classroomCell.substring(classroomCell.indexOf("-") + 1, classroomCell.length()).trim(), 
+							0, false, false, false);
+					db.addClassroom(classroom);
+				}
 			}
 			
-			Schedule schedule = new Schedule(random.nextInt(10000), year, 
-					groupCell.equalsIgnoreCase("Р»РµРєС†С–СЏ") ? null : groupCell, specialization, discipline,
-					lecturer, day, period, classroom, classType);
+			Schedule schedule = new Schedule(year, classType.getName().equalsIgnoreCase("лекція") ? null : groupCell, 
+					specialization, discipline, lecturer, day, period, classroom, classType);
+			
 			db.addSchedule(schedule);
 			
 			for (int t = 0; t < weeks.size(); t++) {
-				ScheduleWeek scheduleWeek = new ScheduleWeek(random.nextInt(10000), schedule, weeks.get(t));
+				ScheduleWeek scheduleWeek = new ScheduleWeek(schedule, weeks.get(t));
 				db.ScheduleWeek(scheduleWeek);
 			}
 			
 			i++;
 		}
-		
-		//DBImitation.showSchedules();
 		
 		workbook.close();
 		
@@ -162,7 +161,7 @@ public class ExcelParser {
 	
 	private static String getLecturerName(String str) {
 		int i = 0;
-		while ((str.charAt(i) < 'Рђ' || str.charAt(i) > 'РЇ')) {
+		while ((str.charAt(i) < 'А' || str.charAt(i) > 'Я')) {
 			i++;
 		}
 		return str.substring(i, str.length());
@@ -170,7 +169,7 @@ public class ExcelParser {
 	
 	private static String getLecturerDegree(String str) {
 		int i = 0;
-		while ((str.charAt(i) < 'Рђ' || str.charAt(i) > 'РЇ')) {
+		while ((str.charAt(i) < 'А' || str.charAt(i) > 'Я')) {
 			i++;
 		}
 		return str.substring(0, i - 1);
@@ -195,9 +194,4 @@ public class ExcelParser {
 		return result;
 	}
 	
-	private static String getClassroomNumber(String str) {
-		String[] arr = str.split("-");
-		return arr[1].trim();
-	}
-
 }

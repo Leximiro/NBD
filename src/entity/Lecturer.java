@@ -14,6 +14,11 @@ public class Lecturer {
 		this.degree = degree;
 	}
 
+	public Lecturer(String name, String lecturerDegree) {
+		this.name = name;
+		this.degree = lecturerDegree;
+	}
+
 	public int getId() {
 		return id;
 	}

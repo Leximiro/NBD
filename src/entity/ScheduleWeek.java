@@ -14,6 +14,11 @@ public class ScheduleWeek {
 		this.week = week;
 	}
 
+	public ScheduleWeek(Schedule schedule, Week week) {
+		this.schedule = schedule;
+		this.week = week;
+	}
+
 	public int getId() {
 		return id;
 	}

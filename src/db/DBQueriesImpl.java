@@ -157,6 +157,11 @@ public class DBQueriesImpl implements DBQueries {
 			PreparedStatement pst = conn.prepareStatement("INSERT INTO discipline(name) VALUES(?)");
 			pst.setString(1, discipline.getName());
 			pst.executeUpdate();
+			
+			ResultSet rs = pst.getGeneratedKeys();
+			if (rs.next()) {
+				discipline.setId(rs.getInt(1));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -194,8 +199,36 @@ public class DBQueriesImpl implements DBQueries {
 			Connection conn = DBConnector.getConnection();
 			PreparedStatement pst = conn.prepareStatement("INSERT INTO teacher(name, degree) VALUES(?, ?)");
 			pst.setString(1, lecturer.getName());
-			pst.setString(1, lecturer.getDegree());
+			pst.setString(2, lecturer.getDegree());
 			pst.executeUpdate();
+			
+			ResultSet rs = pst.getGeneratedKeys();
+			if (rs.next()) {
+				lecturer.setId(rs.getInt(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void addClassroom(Classroom classroom) {
+		try {
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO classroom(capacity, projector, computers, board, building, _number) "
+														+ "VALUES(?, ?, ?, ?, ?, ?)");
+			pst.setInt(1, classroom.getCapacity());
+			pst.setBoolean(2, classroom.isProjector());
+			pst.setBoolean(3, classroom.isComputers());
+			pst.setBoolean(4, classroom.isBoard());
+			pst.setInt(5, classroom.getBuilding());
+			pst.setString(6, classroom.getNumber());
+			pst.executeUpdate();
+			
+			ResultSet rs = pst.getGeneratedKeys();
+			if (rs.next()) {
+				classroom.setId(rs.getInt(1));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -282,12 +315,21 @@ public class DBQueriesImpl implements DBQueries {
 			pst.setInt(2, schedule.getSpecialization().getId());
 			pst.setInt(3, schedule.getDay().getId());
 			pst.setInt(4, schedule.getPeriod().getId());
-			pst.setInt(5, schedule.getClassroom().getId());
+			if(schedule.getClassroom() == null) {
+				pst.setString(5, null);
+			} else {
+				pst.setInt(5, schedule.getClassroom().getId());
+			}
 			pst.setInt(6, schedule.getDiscipline().getId());
 			pst.setInt(7, schedule.getClassType().getId());
 			pst.setInt(8, schedule.getLecturer().getId());
 			pst.setString(9, schedule.getGroup());
 			pst.executeUpdate();
+			
+			ResultSet rs = pst.getGeneratedKeys();
+			if (rs.next()) {
+				schedule.setId(rs.getInt(1));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -306,7 +348,7 @@ public class DBQueriesImpl implements DBQueries {
 		}
 	}
 
-	private Schedule getScheduleById(int id) {
+	public Schedule getScheduleById(int id) {
 		Schedule schedule = new Schedule();
 		boolean exists = false;
 		ResultSet res = null;
@@ -345,7 +387,7 @@ public class DBQueriesImpl implements DBQueries {
 			return null;
 	}
 	
-	private Lecturer getLecturerById(int id) {
+	public Lecturer getLecturerById(int id) {
 		Lecturer lecturer = new Lecturer();
 		boolean exists = false;
 		ResultSet res = null;
@@ -370,7 +412,7 @@ public class DBQueriesImpl implements DBQueries {
 			return null;
 	}
 
-	private ClassType getClassTypeById(int id) {
+	public ClassType getClassTypeById(int id) {
 		ClassType classType = new ClassType();
 		boolean exists = false;
 		ResultSet res = null;
@@ -393,8 +435,32 @@ public class DBQueriesImpl implements DBQueries {
 		else
 			return null;
 	}
+	
+	public ClassType getClassTypeByName(String name) {
+		ClassType classType = new ClassType();
+		boolean exists = false;
+		ResultSet res = null;
+		try {
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM class_type WHERE name = ?");
+			pst.setString(1, name);
+			res = pst.executeQuery();
+			if (res.next()) {
+				exists = true;
+				classType.setId(res.getInt(1));
+				classType.setName(res.getString(2));
+			}
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if(exists)
+			return classType;
+		else
+			return null;
+	}
 
-	private Discipline getDisciplineById(int id) {
+	public Discipline getDisciplineById(int id) {
 		Discipline discipline = new Discipline();
 		boolean exists = false;
 		ResultSet res = null;
@@ -418,7 +484,7 @@ public class DBQueriesImpl implements DBQueries {
 			return null;
 	}
 
-	private Classroom getClassroomById(int id) {
+	public Classroom getClassroomById(int id) {
 		Classroom classroom = new Classroom();
 		boolean exists = false;
 		ResultSet res = null;
@@ -446,8 +512,38 @@ public class DBQueriesImpl implements DBQueries {
 		else
 			return null;
 	}
+	
+	public Classroom getClassroomByBuildingAndNumber(int building, String number) {
+		Classroom classroom = new Classroom();
+		boolean exists = false;
+		ResultSet res = null;
+		try {
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM classroom WHERE building = ? AND _number = ?");
+			pst.setInt(1, building);
+			pst.setString(2, number);
+			res = pst.executeQuery();
+			if (res.next()) {
+				exists = true;
+				classroom.setId(res.getInt(1));
+				classroom.setCapacity(res.getInt(2));
+				classroom.setProjector(res.getBoolean(3));
+				classroom.setComputers(res.getBoolean(4));
+				classroom.setBoard(res.getBoolean(5));
+				classroom.setBuilding(res.getInt(6));
+				classroom.setNumber(res.getString(7));
+			}
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if(exists)
+			return classroom;
+		else
+			return null;
+	}
 
-	private Day getDayById(int id) {
+	public Day getDayById(int id) {
 		Day day = new Day();
 		boolean exists = false;
 		ResultSet res = null;
@@ -471,7 +567,7 @@ public class DBQueriesImpl implements DBQueries {
 			return null;
 	}
 
-	private Specialization getSpecializationById(int id) {
+	public Specialization getSpecializationById(int id) {
 		Specialization specialization = new Specialization();
 		boolean exists = false;
 		ResultSet res = null;
@@ -495,7 +591,7 @@ public class DBQueriesImpl implements DBQueries {
 			return null;
 	}
 
-	private Week getWeekById(int id) {
+	public Week getWeekById(int id) {
 		Week week = new Week();
 		boolean exists = false;
 		ResultSet res = null;
@@ -889,6 +985,30 @@ public class DBQueriesImpl implements DBQueries {
 		return days;
 	}
 
+	public Period getPeriodByNumber(int number) {
+		Period period = new Period();
+		boolean exists = false;
+		ResultSet res = null;
+		try {
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM class_period WHERE period = ?");
+			pst.setInt(1, number);
+			res = pst.executeQuery();
+			if (res.next()) {
+				exists = true;
+				period.setId(res.getInt(1));
+				period.setNumber(res.getInt(2));
+			}
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if(exists)
+			return period;
+		else
+			return null;
+	}
+
 }
 
 class DBConnector{
@@ -896,7 +1016,7 @@ class DBConnector{
 	private static final String url = "jdbc:mysql://den1.mysql1.gear.host/nbd";
 	private static final String user = "nbd";
 	private static final String password = "Ls76xn_QaO!O";
-	private static Connection con = null;
+	public static Connection con = null;
 	private static Properties properties = new Properties();
 
 	public static Connection getConnection() {

@@ -50,13 +50,13 @@ name VARCHAR(255) NOT NULL,
 PRIMARY KEY (id)
 ) ENGINE=InnoDB CHARACTER SET=UTF8;
 
-CREATE TABLE IF NOT EXISTS class_type (		-- Р»РµРєС†С–СЏ / РїСЂР°РєС‚РёРєР°
+CREATE TABLE IF NOT EXISTS class_type (
 id INT(11) AUTO_INCREMENT NOT NULL,
 name VARCHAR(255) NOT NULL,
 PRIMARY KEY (id)
 ) ENGINE=InnoDB CHARACTER SET=UTF8;
 
-CREATE TABLE IF NOT EXISTS class_period (	-- РЅРѕРјРµСЂ РїР°СЂРё
+CREATE TABLE IF NOT EXISTS class_period (
 id INT(11) AUTO_INCREMENT NOT NULL,
 period INT(11) NOT NULL,
 PRIMARY KEY (id)
@@ -64,7 +64,7 @@ PRIMARY KEY (id)
 
 CREATE TABLE IF NOT EXISTS discipline (
 id INT(11) AUTO_INCREMENT NOT NULL,
-name INT(11) NOT NULL,
+name VARCHAR(255) NOT NULL,
 PRIMARY KEY (id)
 ) ENGINE=InnoDB CHARACTER SET=UTF8;
 
@@ -74,7 +74,7 @@ course INT(11) NOT NULL,
 specialty_id INT(11) NOT NULL,
 day_name_id INT(11) NOT NULL,
 class_period_id INT(11) NOT NULL,
-classroom_id INT(11) NOT NULL,
+classroom_id INT(11) NULL,
 discipline_id INT(11) NOT NULL,
 class_type_id INT(11) NOT NULL,
 teacher_id INT(11) NOT NULL,
@@ -116,7 +116,7 @@ FOREIGN KEY (weeks_id) REFERENCES weeks(id)
 PRIMARY KEY (id)
 ) ENGINE=InnoDB CHARACTER SET=UTF8;
 
-CREATE TABLE IF NOT EXISTS finals (			-- СЂРѕР·РєР»Р°Рґ СЃРµСЃС–С— 
+CREATE TABLE IF NOT EXISTS finals (
 id INT(11) AUTO_INCREMENT NOT NULL,
 form VARCHAR(255) NOT NULL,
 _date DATE NOT NULL, 
@@ -145,15 +145,15 @@ FOREIGN KEY (teacher_id) REFERENCES teacher(id)
 PRIMARY KEY (id)
 ) ENGINE=InnoDB CHARACTER SET=UTF8;
 
-INSERT INTO day_name(name) VALUES ("РџРѕРЅРµРґС–Р»РѕРє");
-INSERT INTO day_name(name) VALUES ("Р’С–РІС‚РѕСЂРѕРє");
-INSERT INTO day_name(name) VALUES ("РЎРµСЂРµРґР°");
-INSERT INTO day_name(name) VALUES ("Р§РµС‚РІРµСЂ");
-INSERT INTO day_name(name) VALUES ("Рџ'СЏС‚РЅРёС†СЏ");
-INSERT INTO day_name(name) VALUES ("РЎСѓР±РѕС‚Р°"); 
+INSERT INTO day_name(name) VALUES ("Понеділок");
+INSERT INTO day_name(name) VALUES ("Вівторок");
+INSERT INTO day_name(name) VALUES ("Середа");
+INSERT INTO day_name(name) VALUES ("Четвер");
+INSERT INTO day_name(name) VALUES ("П'ятниця");
+INSERT INTO day_name(name) VALUES ("Субота"); 
 
-INSERT INTO class_type(name) VALUES ("Р›РµРєС†С–СЏ");
-INSERT INTO class_type(name) VALUES ("РџСЂР°РєС‚РёРєР°"); 
+INSERT INTO class_type(name) VALUES ("Лекція");
+INSERT INTO class_type(name) VALUES ("Практика"); 
 
 INSERT INTO class_period(period) VALUES (1);
 INSERT INTO class_period(period) VALUES (2);
@@ -162,3 +162,19 @@ INSERT INTO class_period(period) VALUES (4);
 INSERT INTO class_period(period) VALUES (5);
 INSERT INTO class_period(period) VALUES (6);
 INSERT INTO class_period(period) VALUES (7); 
+
+INSERT INTO weeks(id, _number) VALUES (1, 1);
+INSERT INTO weeks(id, _number) VALUES (2, 2);
+INSERT INTO weeks(id, _number) VALUES (3, 3);
+INSERT INTO weeks(id, _number) VALUES (4, 4);
+INSERT INTO weeks(id, _number) VALUES (5, 5);
+INSERT INTO weeks(id, _number) VALUES (6, 6);
+INSERT INTO weeks(id, _number) VALUES (7, 7);
+INSERT INTO weeks(id, _number) VALUES (8, 8);
+INSERT INTO weeks(id, _number) VALUES (9, 9);
+INSERT INTO weeks(id, _number) VALUES (10, 10);
+INSERT INTO weeks(id, _number) VALUES (11, 11);
+INSERT INTO weeks(id, _number) VALUES (12, 12);
+INSERT INTO weeks(id, _number) VALUES (13, 13);
+INSERT INTO weeks(id, _number) VALUES (14, 14);
+INSERT INTO weeks(id, _number) VALUES (15, 15);
