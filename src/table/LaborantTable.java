@@ -1,11 +1,13 @@
 package table;
 
+import entity.Classroom;
 import entity.Day;
 import entity.Schedule;
 
 import java.util.ArrayList;
 
-public class LecturerTable {
+public class LaborantTable {
+    private String classroom;
     private String day;
     private String lesson1;
     private String lesson2;
@@ -16,9 +18,13 @@ public class LecturerTable {
     private String lesson7;
 
 
-    public  LecturerTable(Day day, ArrayList<Schedule> schedule){
+    public LaborantTable() {
+    }
+
+    public LaborantTable(Classroom classroom, Day day , ArrayList<Schedule> schedules) {
         this.day = day.getName();
-        for (Schedule sced: schedule) {
+        this.classroom = classroom.getNumber();
+        for (Schedule sced: schedules) {
             int number = sced.getPeriod().getNumber();
             switch(number){
                 case 1: this.lesson1 = lessonToString(sced);break;
@@ -32,13 +38,17 @@ public class LecturerTable {
             }
 
         }
+    }
 
+    private String lessonToString(Schedule schedule) {
+        String lesson = "Курс: "+schedule.getYear()+"\nПредмет: "+schedule.getDiscipline().getName()+"\n Викладач: "+schedule.getLecturer().getName()+"\nСпеціальність:\n"+schedule.getSpecialization().getName();
+        return lesson;
 
     }
 
-    private String lessonToString(Schedule schedule){
-        String lesson = "Тижні: "+schedule.getWeekNumber()+"\nПредмет: "+schedule.getDiscipline().getName()+"\nГрупа: "+schedule.getGroup()+"\nАудиторія: "+schedule.getClassroom().getNumber()+"\nСпеціальність:\n"+schedule.getSpecialization().getName();
-        return lesson;
+    public String getClassroom() {
+
+        return classroom;
     }
 
     public String getDay() {
@@ -73,10 +83,6 @@ public class LecturerTable {
         return lesson7;
     }
 
-    @Override
-    public String toString() {
-        return "Lecturer [day=" + day + ", lesson1=" + lesson1 + ", lesson2=" + lesson2 +", lesson3=" + lesson3 +", lesson4=" + lesson4 +", lesson5=" + lesson5 +", lesson6=" + lesson6 + ", lesson7=" + lesson7 +"]";
-    }
 
 
 
