@@ -1,4 +1,4 @@
-п»їpackage parser;
+package parser;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -105,7 +105,7 @@ public class ExcelParser {
 			Cell cell = sheet.getRow(i).getCell(j + 4);
 			String groupCell = formatter.formatCellValue(cell);
 			
-			classType = db.getClassTypeByName(groupCell.equalsIgnoreCase("Р»РµРєС†С–СЏ") ? "Р»РµРєС†С–СЏ" : "РїСЂР°РєС‚РёРєР°");
+			classType = db.getClassTypeByName(groupCell.equalsIgnoreCase("лекція") ? "лекція" : "практика");
 			
 			String weekCell = sheet.getRow(i).getCell(j + 5).getStringCellValue();
 			ArrayList<Integer> weeksNumbers = getWeeksNumbers(weekCell);
@@ -126,7 +126,7 @@ public class ExcelParser {
 				}
 			}
 			
-			Schedule schedule = new Schedule(year, classType.getName().equalsIgnoreCase("Р»РµРєС†С–СЏ") ? null : groupCell, 
+			Schedule schedule = new Schedule(year, classType.getName().equalsIgnoreCase("лекція") ? null : groupCell, 
 					specialization, discipline, lecturer, day, period, classroom, classType);
 			
 			db.addSchedule(schedule);
@@ -161,7 +161,7 @@ public class ExcelParser {
 	
 	private static String getLecturerName(String str) {
 		int i = 0;
-		while ((str.charAt(i) < 'Рђ' || str.charAt(i) > 'РЇ')) {
+		while ((str.charAt(i) < 'А' || str.charAt(i) > 'Я')) {
 			i++;
 		}
 		return str.substring(i, str.length());
@@ -169,7 +169,7 @@ public class ExcelParser {
 	
 	private static String getLecturerDegree(String str) {
 		int i = 0;
-		while ((str.charAt(i) < 'Рђ' || str.charAt(i) > 'РЇ')) {
+		while ((str.charAt(i) < 'А' || str.charAt(i) > 'Я')) {
 			i++;
 		}
 		return str.substring(0, i - 1);

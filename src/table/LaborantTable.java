@@ -41,7 +41,7 @@ public class LaborantTable {
     }
 
     private String lessonToString(Schedule schedule) {
-        String lesson = "РљСѓСЂСЃ: "+schedule.getYear()+"\nРџСЂРµРґРјРµС‚: "+schedule.getDiscipline().getName()+"\n Р’РёРєР»Р°РґР°С‡: "+schedule.getLecturer().getName()+"\nРЎРїРµС†С–Р°Р»СЊРЅС–СЃС‚СЊ:\n"+schedule.getSpecialization().getName();
+        String lesson = "Курс: "+schedule.getYear()+"\nПредмет: "+schedule.getDiscipline().getName()+"\n Викладач: "+schedule.getLecturer().getName()+"\nСпеціальність:\n"+schedule.getSpecialization().getName();
         return lesson;
 
     }

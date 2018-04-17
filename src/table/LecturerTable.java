@@ -37,7 +37,7 @@ public class LecturerTable {
     }
 
     private String lessonToString(Schedule schedule){
-        String lesson = "РўРёР¶РЅС–: "+schedule.getWeekNumber()+"\nРџСЂРµРґРјРµС‚: "+schedule.getDiscipline().getName()+"\nР“СЂСѓРїР°: "+schedule.getGroup()+"\nРђСѓРґРёС‚РѕСЂС–СЏ: "+schedule.getClassroom().getNumber()+"\nРЎРїРµС†С–Р°Р»СЊРЅС–СЃС‚СЊ:\n"+schedule.getSpecialization().getName();
+        String lesson = "Тижні: "+schedule.getWeekNumber()+"\nПредмет: "+schedule.getDiscipline().getName()+"\nГрупа: "+schedule.getGroup()+"\nАудиторія: "+schedule.getClassroom().getNumber()+"\nСпеціальність:\n"+schedule.getSpecialization().getName();
         return lesson;
     }
 
