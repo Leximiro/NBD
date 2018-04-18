@@ -1,1 +1,8 @@
 /target/
+/.idea/
+/bin/
+/target/
+*.classpath
+*.project
+*.fxbuild
+*.iml

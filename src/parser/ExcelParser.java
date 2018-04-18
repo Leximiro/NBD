@@ -84,8 +84,8 @@ public class ExcelParser {
                 db.addDiscipline(discipline);
             }
 
-            String lecturerCell = sheet.getRow(i).getCell(j + 3).getStringCellValue();
-            lecturer = db.getLecturerByName(lecturerCell);
+            String lecturerCell = sheet.getRow(i).getCell(j + 3).getStringCellValue().trim();
+            lecturer = db.getLecturerByName(getLecturerName(lecturerCell));
             if (lecturer == null) {
                 lecturer = new Lecturer(getLecturerName(lecturerCell), getLecturerDegree(lecturerCell));
                 db.addLecturer(lecturer);
@@ -151,7 +151,8 @@ public class ExcelParser {
 
     private static String getLecturerName(String str) {
         int i = 0;
-        while ((str.charAt(i) < 'А' || str.charAt(i) > 'Я')) {
+        while ((str.charAt(i) < 128 || str.charAt(i) > 153) && str.charAt(i) != 158 && str.charAt(i) != 159
+                && str.charAt(i) != 242 && str.charAt(i) != 244) {
             i++;
         }
         return str.substring(i, str.length());
@@ -159,7 +160,8 @@ public class ExcelParser {
 
     private static String getLecturerDegree(String str) {
         int i = 0;
-        while ((str.charAt(i) < 'А' || str.charAt(i) > 'Я')) {
+        while ((str.charAt(i) < 128 || str.charAt(i) > 153) && str.charAt(i) != 158 && str.charAt(i) != 159
+                && str.charAt(i) != 242 && str.charAt(i) != 244) {
             i++;
         }
         return str.substring(0, i - 1);

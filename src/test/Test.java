@@ -8,7 +8,7 @@ public class Test {
     public static void main(String[] args){
 
 //		try {
-//			ExcelParser.parse("D:\\06_programming\\workspace\\eclipse\\NBD-master\\�� �� -1 ����� 17-18�.�.Microsoft Office Excel.xlsx");
+//			ExcelParser.parse("");
 //		} catch (IOException | InvalidInputFileException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
@@ -19,12 +19,14 @@ public class Test {
 
         // DB queries tests
         DBQueriesImpl db = new DBQueriesImpl();
+//        initClassrooms(db);
 //		db.getScheduleErrors();
 //		System.out.println(db.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(null,null,null,null,null));
 //		System.out.println(db.getScheduleByBuildingAndClassroomTypeAndClassroomNumber(1,false,false,false,null));
 //		System.out.println(db.getAllBuildings());
 
-        System.out.println(db.getScheduleByBuildingAndClassroomTypeAndClassroomNumber(10,false,true,true,null));
+        //System.out.println(db.getScheduleByBuildingAndClassroomTypeAndClassroomNumber(10,false,true,true,null));
+        //System.out.println(db.getLecturerByName("В.А. Руссєв"));
     }
 
     static void initClassrooms(DBQueriesImpl db) {

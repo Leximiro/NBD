@@ -21,12 +21,12 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-//import parser.ExcelParser;
+import parser.ExcelParser;
 
 public class UploadController {
     private ObservableList<UploadTable> scheduleErrors = FXCollections.observableArrayList();
     private DBQueriesImpl queries ;
- //   private ExcelParser parser;
+    private ExcelParser parser;
 
 
     @FXML
@@ -139,7 +139,7 @@ public class UploadController {
             System.out.println("File: "+fileName + " loaded;");
             File curFile  = new File (path + "\\" + fileName);
             String curFilePath = path + "\\" + fileName;
-           // parse(curFilePath, queries);
+            ExcelParser.parse(curFilePath, queries);
         }
     }
 
