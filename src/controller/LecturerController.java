@@ -1,6 +1,5 @@
 package controller;
 
-import db.DBQueries;
 import db.DBQueriesImpl;
 import entity.*;
 import javafx.collections.FXCollections;
@@ -15,9 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import table.LecturerTable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 public class LecturerController {
 
@@ -163,8 +160,9 @@ public class LecturerController {
     }
 
     private HashMap<Day,ArrayList<Schedule>> initHashMap(){
-        queries = new DBQueriesImpl();
+
         Lecturer lect = queries.getLecturerByName(lecturerNameChoice.getSelectionModel().getSelectedItem());
+        System.out.println(lect);
         Week wee = null;
         Specialization spec = null;
         Discipline disp = null;
@@ -195,7 +193,7 @@ public class LecturerController {
         }
 
         ArrayList<Schedule> scedule = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(lect,wee,spec,cours,disp);
-        System.out.println(scedule);
+        System.out.println("dick"+scedule);
         ArrayList<Day> days = queries.getAllDays();
         HashMap<Day,ArrayList<Schedule>> dayScheduleHashMap = new HashMap<>();
         for (Day day : days) {

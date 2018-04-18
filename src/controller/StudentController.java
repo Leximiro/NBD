@@ -114,6 +114,7 @@ public class StudentController {
 
 
     public void showTableStudent(ActionEvent actionEvent) {
+        queries = new DBQueriesImpl();
         ArrayList<Day> days = queries.getAllDays();
         HashMap<Day,ArrayList<Schedule>> dayArrayListHashMap = initHashMap();
         System.out.println(studentTables);

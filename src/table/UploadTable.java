@@ -11,7 +11,7 @@ public class UploadTable {
     private String discipline;
     private String lecturer;
     private String day;
-    private String period;
+    private int period;
     private String classroom;
     private String classType;
     private int weekNumber;
@@ -45,7 +45,7 @@ public class UploadTable {
         return day;
     }
 
-    public String getPeriod() {
+    public int getPeriod() {
         return period;
     }
 
@@ -65,13 +65,13 @@ public class UploadTable {
         this.id = schedule.getId();
         this.year = schedule.getYear();
         this.group = schedule.getGroup();
-        this.specialization = schedule.getSpecialization().toString();
-        this.discipline = schedule.getDiscipline().toString();
-        this.lecturer = schedule.getLecturer().toString();
-        this.day = schedule.getDay().toString();
-        this.period = schedule.getPeriod().toString();
-        this.classroom = schedule.getClassroom().toString();
-        this.classType = schedule.getClassType().toString();
+        this.specialization = schedule.getSpecialization().getName();
+        this.discipline = schedule.getDiscipline().getName();
+        this.lecturer = schedule.getLecturer().getName();
+        this.day = schedule.getDay().getName();
+        this.period = schedule.getPeriod().getNumber();
+        this.classroom = schedule.getClassroom().getNumber();
+        this.classType = schedule.getClassType().getName();
         this.weekNumber = schedule.getWeekNumber();
 
     }

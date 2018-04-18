@@ -1,38 +1,39 @@
 package controller;
 
 import db.DBQueriesImpl;
-import entity.*;
+import entity.Schedule;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.Button;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import parser.ExcelParser;
 import parser.InvalidInputFileException;
 import parser.ParserAlgorithmException;
 import table.UploadTable;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static parser.ExcelParser.parse;
+//import parser.ExcelParser;
 
 public class UploadController {
     private ObservableList<UploadTable> scheduleErrors = FXCollections.observableArrayList();
     private DBQueriesImpl queries ;
-    private ExcelParser parser;
+ //   private ExcelParser parser;
 
 
     @FXML
     private Button uploadButton;
+
+    @FXML
+    private Text bdcounter;
 
     @FXML
     private Button deleteButton;
@@ -65,7 +66,7 @@ public class UploadController {
     private TableColumn<Schedule, String> dayError;
 
     @FXML
-    private TableColumn<Schedule, String> periodError;
+    private TableColumn<Schedule, Integer> periodError;
 
     @FXML
     private TableColumn<Schedule, String> classroomError;
@@ -89,7 +90,7 @@ public class UploadController {
         disciplineError.setCellValueFactory(new PropertyValueFactory<Schedule, String>("discipline"));
         lecturerError.setCellValueFactory(new PropertyValueFactory<Schedule, String>("lecturer"));
         dayError.setCellValueFactory(new PropertyValueFactory<Schedule, String>("day"));
-        periodError.setCellValueFactory(new PropertyValueFactory<Schedule, String>("period"));
+        periodError.setCellValueFactory(new PropertyValueFactory<Schedule, Integer>("period"));
         classroomError.setCellValueFactory(new PropertyValueFactory<Schedule, String>("classroom"));
         classTypeError.setCellValueFactory(new PropertyValueFactory<Schedule, String>("classType"));
         weekNumberErrors.setCellValueFactory(new PropertyValueFactory<Schedule, Integer>("weekNumber"));
@@ -98,19 +99,20 @@ public class UploadController {
     }
 
     private void initData() {
-         try {
-             queries = new DBQueriesImpl();
-             ArrayList<Schedule> schedules = queries.getScheduleErrors();
-             for (Schedule sced : schedules) {
-                 UploadTable tableUpload = new UploadTable(sced);
+        try {
+            queries = new DBQueriesImpl();
+            ArrayList<Schedule> schedules = queries.getScheduleErrors();
+            for (Schedule sced : schedules) {
+                UploadTable tableUpload = new UploadTable(sced);
 
-                 scheduleErrors.add(tableUpload);
-             }
-         }
-         catch(NullPointerException e)
-         {
-             System.out.print("NullPointerException caught");
-         }
+                scheduleErrors.add(tableUpload);
+            }
+        }
+        catch(NullPointerException e)
+        {
+            System.out.print("NullPointerException caught");
+        }
+        bdcounter.setText("Кількість записів: "+queries.getNumberOfClasses());
     }
 
 
@@ -137,7 +139,7 @@ public class UploadController {
             System.out.println("File: "+fileName + " loaded;");
             File curFile  = new File (path + "\\" + fileName);
             String curFilePath = path + "\\" + fileName;
-            parse(curFilePath, queries);
+           // parse(curFilePath, queries);
         }
     }
 
@@ -153,6 +155,6 @@ public class UploadController {
             UploadTable tableUpload = new UploadTable(sced);
             scheduleErrors.add(tableUpload);
         }
-        tableErrors.refresh();
+        tableErrors.setItems(scheduleErrors);
     }
 }

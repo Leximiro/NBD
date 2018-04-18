@@ -95,18 +95,21 @@ public class LaborantController {
     }
 
     public void showTableLaborant(ActionEvent actionEvent) {
-        queries = new DBQueriesImpl();
+
         ArrayList<Day> days = queries.getAllDays();
         ArrayList<Classroom> classrooms = queries.getAllClassrooms();
         HashMap<Classroom,ArrayList<Schedule>> classroomArrayListHashMap = initHashMapArrayList();
         laborantTables.clear();
         laborantTable.setItems(laborantTables);
+        System.out.println(classroomArrayListHashMap);
 
         for (Classroom classroom: classrooms) {
             for (Day day:days) {
+                System.out.println(classroomArrayListHashMap.get(classroom));
 
                 ArrayList<Schedule> schedules = sortByDay(day,classroomArrayListHashMap.get(classroom));
-                System.out.println(schedules);
+
+
                 LaborantTable studTable = new LaborantTable(classroom,day,schedules);
                 laborantTables.add(studTable);
             }
@@ -119,22 +122,22 @@ public class LaborantController {
     private ArrayList<Schedule> sortByDay(Day day, ArrayList<Schedule> schedules){
         ArrayList<Schedule> res = new ArrayList<>();
         for (Schedule schedule: schedules) {
-            if( schedule.getDay().equals(day)){
+            if( schedule.getDay().getId()==day.getId()){
                 res.add(schedule);
             }
         }
+
         return res;
     }
 
     private HashMap<Classroom,ArrayList<Schedule>> initHashMapArrayList() {
-        queries = new DBQueriesImpl();
-
 
         HashMap<Classroom,ArrayList<Schedule>> dayScheduleHashMap = new HashMap<>();
         boolean computer = computers.isSelected() ;
         boolean projectors = projector.isSelected();
         boolean boards = board.isSelected();
         Integer buildings = buildingChoice.getSelectionModel().getSelectedItem();
+        System.out.println(""+computer+projectors+boards+buildings);
 
 
         ArrayList<Schedule> scedule = queries.getScheduleByBuildingAndClassroomTypeAndClassroomNumber(buildings,boards,computer,projectors,null);

@@ -5,6 +5,7 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="603.0" prefWidth="1133.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.UploadController">
   <children>
@@ -30,5 +31,6 @@
         <Button id="deleteSchedule" fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteSchedule" prefWidth="129.0" text="Видалити" />
       </items>
     </ToolBar>
+    <Text fx:id="bdcounter" layoutX="21.0" layoutY="67.0" scaleX="1.6324334108869984" scaleY="2.0015826331702464" strokeType="OUTSIDE" strokeWidth="0.0" />
   </children>
 </AnchorPane>
