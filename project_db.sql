@@ -149,7 +149,7 @@ INSERT INTO day_name(name) VALUES ("Понеділок");
 INSERT INTO day_name(name) VALUES ("Вівторок");
 INSERT INTO day_name(name) VALUES ("Середа");
 INSERT INTO day_name(name) VALUES ("Четвер");
-INSERT INTO day_name(name) VALUES ("П'ятниця");
+INSERT INTO day_name(name) VALUES ("П`ятниця");
 INSERT INTO day_name(name) VALUES ("Субота"); 
 
 INSERT INTO class_type(name) VALUES ("Лекція");

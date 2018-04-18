@@ -120,6 +120,11 @@ public class DBQueriesImpl implements DBQueries {
 			PreparedStatement pst = conn.prepareStatement("INSERT INTO specialty(name) VALUES(?)");
 			pst.setString(1, specialization.getName());
 			pst.executeUpdate();
+
+			ResultSet rs = pst.getGeneratedKeys();
+			if (rs.next()) {
+				specialization.setId(rs.getInt(1));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

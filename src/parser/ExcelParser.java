@@ -34,7 +34,6 @@ public class ExcelParser {
         if (specialization == null) {
             specialization = new Specialization(name);
             db.addSpecialization(specialization);
-            //DB Insert
         }
 
         int year = getYear(sheet.getRow(SPECIALIZATION_AND_COURSE_ROW)
@@ -61,13 +60,6 @@ public class ExcelParser {
             if (!dayCell.equals("")) {
                 day = db.getDayByName(dayCell);
                 period = db.getPeriodByNumber(1);
-            } else if (day == null) {
-                throw new ParserAlgorithmException();
-            }
-
-            if (period == null) {
-                break main;
-                //throw new ParserAlgorithmException();
             } else if (!sheet.getRow(i).getCell(j + 1).getStringCellValue().equals("")){
                 period = db.getPeriodByNumber(period.getNumber() + 1);
             }
@@ -151,17 +143,19 @@ public class ExcelParser {
 
     private static String getLecturerName(String str) {
         int i = 0;
-        while ((str.charAt(i) < 128 || str.charAt(i) > 153) && str.charAt(i) != 158 && str.charAt(i) != 159
-                && str.charAt(i) != 242 && str.charAt(i) != 244) {
+        while (!String.valueOf(str.charAt(i)).equals(String.valueOf(str.charAt(i)).toUpperCase())){
             i++;
         }
+        /*while ((str.charAt(i) < 128 || str.charAt(i) > 153) && str.charAt(i) != 158 && str.charAt(i) != 159
+                && str.charAt(i) != 242 && str.charAt(i) != 244) {
+            i++;
+        }*/
         return str.substring(i, str.length());
     }
 
     private static String getLecturerDegree(String str) {
         int i = 0;
-        while ((str.charAt(i) < 128 || str.charAt(i) > 153) && str.charAt(i) != 158 && str.charAt(i) != 159
-                && str.charAt(i) != 242 && str.charAt(i) != 244) {
+        while (!String.valueOf(str.charAt(i)).equals(String.valueOf(str.charAt(i)).toUpperCase())){
             i++;
         }
         return str.substring(0, i - 1);
