@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/src/parser/ExcelParser.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/table/LaborantTable.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/table/LecturerTable.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/table/StudentTable.java" charset="ISO-8859-1" />
-  </component>
-</project>
