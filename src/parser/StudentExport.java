@@ -6,7 +6,9 @@ import entity.*;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -32,6 +34,8 @@ public class StudentExport {
         XSSFSheet sheet = workbook.createSheet("Sheet 1");
 
         XSSFCellStyle style = workbook.createCellStyle();
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setAlignment(HorizontalAlignment.CENTER);
         style.setWrapText(true);
 
         ArrayList<Period> periods = getPeriods(schedules);
@@ -109,7 +113,7 @@ public class StudentExport {
         DBQueries queries = new DBQueriesImpl();
         ArrayList<Schedule> schedules = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline
                 (null, null, null, null, null);
-        export(new Specialization(100, "Biology"), 7, new Week(8, 8), schedules, "E:\\report.xlsx");
+        export(new Specialization(100, "Biology"), 7, new Week(8, 8), schedules, "E:\\seport.xlsx");
     }
 
 }
