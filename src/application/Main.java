@@ -10,7 +10,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			primaryStage.setTitle(" ");
+			primaryStage.setTitle("Schedule Check");
 			Parent root = FXMLLoader.load(getClass().getResource("../view/main.fxml"));
 
 		    primaryStage.setScene(new Scene(root));

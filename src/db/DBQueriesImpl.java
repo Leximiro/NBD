@@ -49,8 +49,8 @@ public class DBQueriesImpl implements DBQueries {
 			pst.executeQuery();
 			pst = conn.prepareStatement("TRUNCATE TABLE discipline");
 			pst.executeQuery();
-			pst = conn.prepareStatement("TRUNCATE TABLE weeks");
-			pst.executeQuery();
+			//pst = conn.prepareStatement("TRUNCATE TABLE weeks");
+			//pst.executeQuery();
 			pst = conn.prepareStatement("TRUNCATE TABLE teacher");
 			pst.executeQuery();
 			pst = conn.prepareStatement("TRUNCATE TABLE specialty");
@@ -922,47 +922,80 @@ public class DBQueriesImpl implements DBQueries {
 	@Override
 	public ArrayList<Schedule> getScheduleErrors(){
 		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+		ResultSet res0 = null;
 		ResultSet res = null;
         try {
         	Connection conn = DBConnector.getConnection();
-            PreparedStatement pst = conn.prepareStatement(""+
-            		"SELECT schedule.*, weeks._number " + 
-            		"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id "
-					  + "INNER JOIN weeks ON schedule_week.weeks_id = weeks.id "
-					  + "INNER JOIN classroom ON classroom_id = classroom.id " + 
-            		"GROUP BY day_name_id, class_period_id, teacher_id " +
-            		"HAVING count(*) > 1 "
-            		+ "UNION ALL " +
-            		"SELECT schedule.*, weeks._number " + 
-            		"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id "
-					  + "INNER JOIN weeks ON schedule_week.weeks_id = weeks.id "
-					  + "INNER JOIN classroom ON classroom_id = classroom.id " + 
-            		"GROUP BY day_name_id, class_period_id, classroom_id " +
-            		"HAVING count(*) > 1");
-            res = pst.executeQuery();
-            while (res.next()) {
-            	Schedule schedule = new Schedule();
-            	schedule.setId(res.getInt(1));
-				schedule.setYear(res.getInt(2));
-					Specialization special = getSpecializationById(res.getInt(3));
-				schedule.setSpecialization(special);
-					Day day = getDayById(res.getInt(4));
-				schedule.setDay(day);
-					Period period = new Period(res.getInt(5), res.getInt(5));
-				schedule.setPeriod(period);
-					Classroom classroom = getClassroomById(res.getInt(6));
-				schedule.setClassroom(classroom);
-					Discipline discipl = getDisciplineById(res.getInt(7));
-				schedule.setDiscipline(discipl);
-					ClassType classType = getClassTypeById(res.getInt(8));
-				schedule.setClassType(classType);
-					Lecturer lectur = getLecturerById(res.getInt(9));
-				schedule.setLecturer(lectur);
-				schedule.setGroup(res.getString(10));
-            	schedule.setWeekNumber(res.getInt(11));
-            	schedules.add(schedule);
+        	ArrayList<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
+            PreparedStatement pst0 = conn.prepareStatement(""+
+							"SELECT day_name_id, class_period_id, weeks._number " +
+							"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id "
+							+ "INNER JOIN weeks ON schedule_week.weeks_id = weeks.id "
+							+ "INNER JOIN classroom ON classroom_id = classroom.id " +
+							"GROUP BY day_name_id, class_period_id, teacher_id, weeks._number " +
+							"HAVING count(*) > 1 "
+							+ "UNION ALL " +
+							"SELECT day_name_id, class_period_id, weeks._number " +
+							"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id "
+							+ "INNER JOIN weeks ON schedule_week.weeks_id = weeks.id "
+							+ "INNER JOIN classroom ON classroom_id = classroom.id " +
+							"GROUP BY day_name_id, class_period_id, classroom_id, weeks._number " +
+							"HAVING count(*) > 1");
+            res0 = pst0.executeQuery();
+            while (res0.next()) {
+            	ScheduleDTO dto = new ScheduleDTO();
+            	dto.day_name_id = res0.getInt(1);
+				dto.class_period_id = res0.getInt(2);
+				dto.weeks_number = res0.getInt(3);
+				dtos.add(dto);
             }
-            pst.close();
+			pst0.close();
+
+            if(dtos.size()>1){
+				StringBuilder stringBuilder = new StringBuilder("");
+				for(ScheduleDTO s : dtos)
+					stringBuilder.append("?,");
+				if(stringBuilder.length() > 1)
+					stringBuilder.setLength(stringBuilder.length() - 1);
+				String inPart = stringBuilder.toString();
+
+				String SQL = "SELECT schedule.*, weeks._number FROM " +
+						"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
+						"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
+						"WHERE day_name_id IN ("+inPart+") AND class_period_id IN ("+inPart+") AND weeks._number IN ("+inPart+")";
+
+				PreparedStatement pst = conn.prepareStatement(SQL);
+				int counter = 1;
+				for(ScheduleDTO s : dtos)
+					pst.setInt(counter++, s.day_name_id);
+				for(ScheduleDTO s : dtos)
+					pst.setInt(counter++, s.class_period_id);
+				for(ScheduleDTO s : dtos)
+					pst.setInt(counter++, s.weeks_number);
+				res = pst.executeQuery();
+				while (res.next()) {
+					Schedule schedule = new Schedule();
+					schedule.setId(res.getInt(1));
+					schedule.setYear(res.getInt(2));
+					Specialization special = getSpecializationById(res.getInt(3));
+					schedule.setSpecialization(special);
+					Day day = getDayById(res.getInt(4));
+					schedule.setDay(day);
+					Period period = new Period(res.getInt(5), res.getInt(5));
+					schedule.setPeriod(period);
+					Classroom classroom = getClassroomById(res.getInt(6));
+					schedule.setClassroom(classroom);
+					Discipline discipl = getDisciplineById(res.getInt(7));
+					schedule.setDiscipline(discipl);
+					ClassType classType = getClassTypeById(res.getInt(8));
+					schedule.setClassType(classType);
+					Lecturer lectur = getLecturerById(res.getInt(9));
+					schedule.setLecturer(lectur);
+					schedule.setGroup(res.getString(10));
+					schedule.setWeekNumber(res.getInt(11));
+					schedules.add(schedule);
+				}
+			}
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1018,9 +1051,9 @@ public class DBQueriesImpl implements DBQueries {
 
 class DBConnector{
 
-	private static final String url = "jdbc:mysql://localhost:3306/cars";
+	private static final String url = "jdbc:mysql://localhost:3306/nbd";
 	private static final String user = "root";
-	private static final String password = "root";
+	private static final String password = "";
 	public static Connection con = null;
 	private static Properties properties = new Properties();
 
@@ -1044,4 +1077,8 @@ class DBConnector{
 		return con;
 	}
 	
+}
+
+class ScheduleDTO {
+	protected Integer day_name_id, class_period_id, weeks_number;
 }
