@@ -136,7 +136,8 @@ public class ExcelParser {
         if (str.indexOf("\"") == -1 || (str.lastIndexOf("\"") - str.indexOf("\"")) == 0) {
             throw new InvalidInputFileException();
         }
-        return str.substring(str.indexOf("\"") + 1, str.lastIndexOf("\""));
+        return str.contains("МП") ? "МП " + str.substring(str.indexOf("\"") + 1, str.lastIndexOf("\"")) :
+                "БП " + str.substring(str.indexOf("\"") + 1, str.lastIndexOf("\""));
     }
 
     private static int getYear(String str) throws InvalidInputFileException {

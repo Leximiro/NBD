@@ -14,6 +14,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class LecturerExport {
 
@@ -26,9 +28,10 @@ public class LecturerExport {
         XSSFCellStyle style = workbook.createCellStyle();
         style.setWrapText(true);
 
-
         ArrayList<Period> periods = getPeriods(schedules);
+        Collections.sort(periods, new PeriodSorter());
         ArrayList<Day> days = getDays(schedules);
+        Collections.sort(days, new DaySorter());
 
         int rowNum = 0;
         Row row = sheet.createRow(rowNum);
@@ -101,6 +104,22 @@ public class LecturerExport {
         ArrayList<Schedule> schedules = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline
                 (null, null, null, null, null);
         export(new Lecturer("Pupkin", "aspirant"), new Week(8, 8), schedules, "E:\\report.xlsx");
+    }
+
+}
+
+class DaySorter implements Comparator<Day> {
+
+    public int compare(Day one, Day another){
+        return one.getId() - another.getId();
+    }
+
+}
+
+class PeriodSorter implements Comparator<Period> {
+
+    public int compare(Period one, Period another){
+        return one.getId() - another.getId();
     }
 
 }
