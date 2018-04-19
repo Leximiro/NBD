@@ -151,7 +151,8 @@ public class ExcelParser {
 
     private static String getLecturerName(String str) {
         int i = 0;
-        while (!String.valueOf(str.charAt(i)).equals(String.valueOf(str.charAt(i)).toUpperCase())){
+        while (str.charAt(i) != 'Ю' && str.charAt(i) != 'Я' && str.charAt(i) != 'Є' && str.charAt(i) != 'Ї' &&
+                (str.charAt(i) < 'А' || str.charAt(i) > 'Щ')){
             i++;
         }
         return str.substring(i, str.length());
@@ -159,7 +160,8 @@ public class ExcelParser {
 
     private static String getLecturerDegree(String str) {
         int i = 0;
-        while (!String.valueOf(str.charAt(i)).equals(String.valueOf(str.charAt(i)).toUpperCase())){
+        while (str.charAt(i) != 'Ю' && str.charAt(i) != 'Я' && str.charAt(i) != 'Є' && str.charAt(i) != 'Ї' &&
+                (str.charAt(i) < 'А' || str.charAt(i) > 'Щ')){
             i++;
         }
         return str.substring(0, i - 1);

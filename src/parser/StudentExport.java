@@ -18,9 +18,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 
-public class LecturerExport {
+public class StudentExport {
 
-    public static void export(Lecturer lecturer, Week week, ArrayList<Schedule> oldSchedules, String path){
+    public static void export(Specialization specialization, int year, Week week, ArrayList<Schedule> oldSchedules, String path){
 
         HashSet<Schedule> schedules = new HashSet<Schedule>();
         for (Schedule schedule : oldSchedules){
@@ -42,7 +42,7 @@ public class LecturerExport {
         int rowNum = 0;
         Row row = sheet.createRow(rowNum);
         row.setRowStyle(style);
-        row.createCell(0).setCellValue(lecturer.getName());
+        row.createCell(0).setCellValue(specialization.getName() + "-" + year);
         row.getCell(0).setCellStyle(style);
         row.createCell(1).setCellValue(week == null ? "" : "Week " + week.getNumber());
         row.getCell(1).setCellStyle(style);
@@ -63,10 +63,10 @@ public class LecturerExport {
                 for (Schedule schedule : schedules){
                     if (schedule.getDay().equals(days.get(i)) && schedule.getPeriod().equals(periods.get(j))){
                         output.append(schedule.getClassroom().getBuilding() + "-" + schedule.getClassroom().getNumber() + "\n");
+                        output.append(schedule.getLecturer().getDegree() + " " + schedule.getLecturer().getName() + "\n");
                         output.append(schedule.getDiscipline().getName() + "\n");
                         output.append(schedule.getClassType().getName().equalsIgnoreCase
-                                ("лекція") ?  schedule.getClassType().getName() + "\n" : "Група " + schedule.getGroup() + "\n");
-                        output.append(schedule.getSpecialization().getName() + "-" + schedule.getYear() + "\n\n");
+                                ("лекція") ?  schedule.getClassType().getName() + "\n" : "Група " + schedule.getGroup() + "\n\n");
                     }
                 }
                 row.createCell(j + 1).setCellValue(output.toString());
@@ -109,23 +109,7 @@ public class LecturerExport {
         DBQueries queries = new DBQueriesImpl();
         ArrayList<Schedule> schedules = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline
                 (null, null, null, null, null);
-        export(new Lecturer("Pupkin", "aspirant"), new Week(8, 8), schedules, "E:\\leport.xlsx");
-    }
-
-}
-
-class DaySorter implements Comparator<Day> {
-
-    public int compare(Day one, Day another){
-        return one.getId() - another.getId();
-    }
-
-}
-
-class PeriodSorter implements Comparator<Period> {
-
-    public int compare(Period one, Period another){
-        return one.getId() - another.getId();
+        export(new Specialization(100, "Biology"), 7, new Week(8, 8), schedules, "E:\\report.xlsx");
     }
 
 }
