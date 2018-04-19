@@ -1018,9 +1018,9 @@ public class DBQueriesImpl implements DBQueries {
 
 class DBConnector{
 
-	private static final String url = "jdbc:mysql://den1.mysql1.gear.host/nbd";
-	private static final String user = "nbd";
-	private static final String password = "Ls76xn_QaO!O";
+	private static final String url = "jdbc:mysql://localhost:3306/cars";
+	private static final String user = "root";
+	private static final String password = "root";
 	public static Connection con = null;
 	private static Properties properties = new Properties();
 

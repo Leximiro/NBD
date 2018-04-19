@@ -20,24 +20,24 @@ public class ExcelParser {
     private static final int DATA_START_ROW = 10;
     private static final int DATA_START_COLUMN = 0;
 
+    static XSSFSheet sheet;
+
     public static void parse(String path, DBQueriesImpl db) throws IOException, InvalidInputFileException, ParserAlgorithmException {
 
         FileInputStream file = new FileInputStream(new File(path));
 
         XSSFWorkbook workbook = new XSSFWorkbook(file);
 
-        XSSFSheet sheet = workbook.getSheetAt(0);
+        sheet = workbook.getSheetAt(0);
 
-        String name = getSpecialization(sheet.getRow(SPECIALIZATION_AND_COURSE_ROW)
-                .getCell(SPECIALIZATION_AND_COURSE_COLUMN).getStringCellValue());
+        String name = getSpecialization(getStringCellValue(SPECIALIZATION_AND_COURSE_ROW, SPECIALIZATION_AND_COURSE_COLUMN));
         Specialization specialization = db.getSpecializationByName(name);
         if (specialization == null) {
             specialization = new Specialization(name);
             db.addSpecialization(specialization);
         }
 
-        int year = getYear(sheet.getRow(SPECIALIZATION_AND_COURSE_ROW)
-                .getCell(SPECIALIZATION_AND_COURSE_COLUMN).getStringCellValue());
+        int year = getYear(getStringCellValue(SPECIALIZATION_AND_COURSE_ROW, SPECIALIZATION_AND_COURSE_COLUMN));
 
         int i = DATA_START_ROW;
         int j = DATA_START_COLUMN;
@@ -56,47 +56,46 @@ public class ExcelParser {
                 break main;
             }
 
-            String dayCell = sheet.getRow(i).getCell(j).getStringCellValue();
+            String dayCell = getStringCellValue(i, j);
             if (!dayCell.equals("")) {
                 day = db.getDayByName(dayCell);
                 period = db.getPeriodByNumber(1);
-            } else if (!sheet.getRow(i).getCell(j + 1).getStringCellValue().equals("")){
+            } else if (!getStringCellValue(i, j + 1).equals("")){
                 period = db.getPeriodByNumber(period.getNumber() + 1);
             }
 
             if ((sheet.getRow(i).getCell(j + 2) == null) ||
-                    sheet.getRow(i).getCell(j + 2).getStringCellValue().equals("")) {
+                    getStringCellValue(i, j + 2).equals("")) {
                 i++;
                 continue main;
             }
-            String disciplineCell = sheet.getRow(i).getCell(j + 2).getStringCellValue();
+
+            String disciplineCell = getStringCellValue(i, j + 2);
             discipline = db.getDisciplineByName(disciplineCell);
             if (discipline == null) {
                 discipline = new Discipline(disciplineCell);
                 db.addDiscipline(discipline);
             }
 
-            String lecturerCell = sheet.getRow(i).getCell(j + 3).getStringCellValue().trim();
+            String lecturerCell = getStringCellValue(i, j + 3).trim();
             lecturer = db.getLecturerByName(getLecturerName(lecturerCell));
             if (lecturer == null) {
                 lecturer = new Lecturer(getLecturerName(lecturerCell), getLecturerDegree(lecturerCell));
                 db.addLecturer(lecturer);
             }
 
-            DataFormatter formatter = new DataFormatter();
-            Cell cell = sheet.getRow(i).getCell(j + 4);
-            String groupCell = formatter.formatCellValue(cell);
+            String groupCell = getStringCellValue(i, j + 4);
 
             classType = db.getClassTypeByName(groupCell.equalsIgnoreCase("лекція") ? "лекція" : "практика");
 
-            String weekCell = sheet.getRow(i).getCell(j + 5).getStringCellValue();
+            String weekCell = getStringCellValue(i, j + 5);
             ArrayList<Integer> weeksNumbers = getWeeksNumbers(weekCell);
             for (int w = 0; w < weeksNumbers.size(); w++) {
                 Week week = db.getWeekByNumber(weeksNumbers.get(w));
                 weeks.add(week);
             }
 
-            String classroomCell = sheet.getRow(i).getCell(j + 6).getStringCellValue();
+            String classroomCell = getStringCellValue(i, j + 6);
             if (!classroomCell.equals("")) {
                 classroom = db.getClassroomByBuildingAndNumber(Integer.parseInt(classroomCell.substring(0, classroomCell.indexOf("-")).trim()),
                         classroomCell.substring(classroomCell.indexOf("-") + 1, classroomCell.length()).trim());
@@ -118,11 +117,19 @@ public class ExcelParser {
                 db.ScheduleWeek(scheduleWeek);
             }
 
+            weeks.clear();
+
             i++;
         }
 
         workbook.close();
 
+    }
+
+    private static String getStringCellValue(int i, int j){
+        DataFormatter formatter = new DataFormatter();
+        Cell cell = sheet.getRow(i).getCell(j);
+        return formatter.formatCellValue(cell);
     }
 
     private static String getSpecialization(String str) throws InvalidInputFileException {
@@ -146,10 +153,6 @@ public class ExcelParser {
         while (!String.valueOf(str.charAt(i)).equals(String.valueOf(str.charAt(i)).toUpperCase())){
             i++;
         }
-        /*while ((str.charAt(i) < 128 || str.charAt(i) > 153) && str.charAt(i) != 158 && str.charAt(i) != 159
-                && str.charAt(i) != 242 && str.charAt(i) != 244) {
-            i++;
-        }*/
         return str.substring(i, str.length());
     }
 
