@@ -27,6 +27,9 @@ public class UploadController {
     private ObservableList<UploadTable> scheduleErrors = FXCollections.observableArrayList();
     private DBQueriesImpl queries ;
     private ExcelParser parser;
+    private LecturerController lecturerController;
+    private StudentController studentController;
+    private LaborantController laborantController;
 
 
     @FXML
@@ -141,6 +144,10 @@ public class UploadController {
             String curFilePath = path + "\\" + fileName;
             ExcelParser.parse(curFilePath, queries);
         }
+        lecturerController.choiceBoxesFill();
+        studentController.choiceBoxesFill();
+        laborantController.choiceBoxFill();
+
     }
 
     public void deleteSchedule(javafx.event.ActionEvent actionEvent) {

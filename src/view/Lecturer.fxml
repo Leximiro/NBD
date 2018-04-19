@@ -21,16 +21,17 @@
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="171.0" text="7 " fx:id="lesson7" />
       </columns>
     </TableView>
-    <Button fx:id="showButton" layoutX="1047.0" layoutY="38.0" mnemonicParsing="false" onAction="#showButtonCLicked" text="Показати" />
+    <Button fx:id="showButton" layoutX="1037.0" layoutY="8.0" mnemonicParsing="false" onAction="#showButtonCLicked" text="Показати" />
     <Label layoutX="14.0" layoutY="18.0" text="Прізвище" />
     <Label layoutX="244.0" layoutY="18.0" text="Тижні" />
     <Label layoutX="356.0" layoutY="21.0" text="Спеціальність" />
     <Label layoutX="567.0" layoutY="18.0" text="Курс" />
-    <Label layoutX="763.0" layoutY="21.0" text="Предмет" />
+    <Label layoutX="666.0" layoutY="22.0" text="Предмет" />
     <ChoiceBox fx:id="lecturerNameChoice" layoutX="14.0" layoutY="38.0" />
     <ChoiceBox fx:id="weeksChoice" layoutX="244.0" layoutY="38.0" />
     <ChoiceBox fx:id="specChoice" layoutX="356.0" layoutY="38.0" />
     <ChoiceBox fx:id="courseChoice" layoutX="567.0" layoutY="38.0" />
-    <ChoiceBox fx:id="scheduleChoice" layoutX="763.0" layoutY="38.0" />
+    <ChoiceBox fx:id="scheduleChoice" layoutX="666.0" layoutY="38.0" />
+    <Button fx:id="downloadLect" layoutX="1027.0" layoutY="38.0" mnemonicParsing="false" onAction="#downloadLecturer" text="Завантажити" />
   </children>
 </AnchorPane>

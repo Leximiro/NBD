@@ -8,8 +8,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import parser.LabmanagerExport;
+import parser.LecturerExport;
 import table.LaborantTable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +22,7 @@ import java.util.HashSet;
 public class LaborantController {
     private ObservableList<LaborantTable> laborantTables = FXCollections.observableArrayList();
     private DBQueriesImpl queries ;
+
 
     @FXML
     ChoiceBox<Integer> buildingChoice;
@@ -31,6 +37,8 @@ public class LaborantController {
 
     @FXML
     private Button classroomShowBtn;
+    @FXML
+    private Button downloadLab;
 
     @FXML
     private TableView<LaborantTable> laborantTable;
@@ -81,7 +89,8 @@ public class LaborantController {
 
     }
 
-    private void choiceBoxFill() {
+    public void choiceBoxFill() {
+        buildingChoice.getItems().clear();
 
         queries = new DBQueriesImpl();
         ArrayList<Integer> buildings = queries.getAllBuildings();
@@ -177,5 +186,19 @@ public class LaborantController {
 
 
         return dayScheduleHashMap;
+    }
+
+    public void downloadLabBtn(ActionEvent actionEvent) {
+
+        boolean computer = computers.isSelected() ;
+        boolean projectors = projector.isSelected();
+        boolean boards = board.isSelected();
+        Integer buildings = buildingChoice.getSelectionModel().getSelectedItem();
+        ArrayList<Schedule> schedules = queries.getScheduleByBuildingAndClassroomTypeAndClassroomNumber(buildings,boards,computer,projectors,null);
+        DirectoryChooser chooser = new DirectoryChooser();
+        File showDialog = chooser.showDialog(new Stage());
+        Week wee = queries.getWeekByNumber(1);
+        String path = showDialog.getPath()+"/"+buildings+".xlsx";
+        LabmanagerExport.export(wee,schedules,path);
     }
 }

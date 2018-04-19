@@ -12,8 +12,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import parser.StudentExport;
 import table.StudentTable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,7 +38,10 @@ public class StudentController {
 
 
     @FXML
-    private Button showButton;
+    private Button showChoiceStudent;
+    @FXML
+    private Button downloadStudent;
+
 
     @FXML
     private TableView<StudentTable> studentTable;
@@ -79,7 +86,10 @@ public class StudentController {
 
     }
 
-    private void choiceBoxesFill() {
+    public void choiceBoxesFill() {
+        specChoiceStudent.getItems().clear();
+        courseChoiceStudent.getItems().clear();
+        lessonChoiceStudent.getItems().clear();
         queries = new DBQueriesImpl();
         ArrayList<Specialization> specs = queries.getAllSpecializations();
         ObservableList<String> specFX = FXCollections.observableArrayList();
@@ -173,4 +183,37 @@ public class StudentController {
     }
 
 
+    public void downloadStudentBtn(ActionEvent actionEvent) {
+
+        queries = new DBQueriesImpl();
+        Specialization spec = null;
+        Discipline disp = null;
+        Integer cours = null;
+
+        try{
+            spec = queries.getSpecializationByName(specChoiceStudent.getSelectionModel().getSelectedItem());
+        }
+        catch (NullPointerException e) {
+
+        }try{
+            cours =  courseChoiceStudent.getSelectionModel().getSelectedItem();
+        }
+        catch (NullPointerException e) {
+
+
+        }try{
+            disp = queries.getDisciplineByName(lessonChoiceStudent.getSelectionModel().getSelectedItem());
+        }
+        catch (NullPointerException e) {
+            ;
+        }
+
+        ArrayList<Schedule> scedule = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(null,null,spec,cours,disp);
+        DirectoryChooser chooser = new DirectoryChooser();
+        File showDialog = chooser.showDialog(new Stage());
+        String path = showDialog.getPath()+"/"+spec.getName()+".xlsx";
+        StudentExport.export(spec,cours,queries.getWeekByNumber(scedule.get(1).getWeekNumber()),scedule,path);
+
+
+    }
 }

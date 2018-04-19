@@ -27,6 +27,7 @@
     <ChoiceBox fx:id="courseChoiceStudent" layoutX="217.0" layoutY="29.0" prefWidth="98.0" />
     <Label layoutX="551.0" layoutY="13.0" text="Предмет" />
     <ChoiceBox fx:id="lessonChoiceStudent" layoutX="551.0" layoutY="29.0" prefWidth="98.0" />
-    <Button fx:id="showChoiceStudent" layoutX="1047.0" layoutY="29.0" mnemonicParsing="false" onAction="#showTableStudent" text="Показати" />
+    <Button fx:id="showChoiceStudent" layoutX="1038.0" layoutY="11.0" mnemonicParsing="false" onAction="#showTableStudent" text="Показати" />
+    <Button fx:id="downloadStudent" layoutX="1025.0" layoutY="36.0" mnemonicParsing="false" onAction="#downloadStudentBtn" text="Завантажити" />
   </children>
 </AnchorPane>

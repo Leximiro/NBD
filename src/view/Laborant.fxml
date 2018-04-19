@@ -30,6 +30,7 @@
         <CheckBox fx:id="projector" mnemonicParsing="false" text="Проектор" />
         <CheckBox fx:id="board" mnemonicParsing="false" text="Дошка" />
         <Button id="showClassroom" fx:id="classroomShowBtn" mnemonicParsing="false" onAction="#showTableLaborant" text="Показати" />
+        <Button fx:id="downloadLab" mnemonicParsing="false" onAction="#downloadLabBtn" text="Завантажити" />
       </items>
     </ToolBar>
   </children>

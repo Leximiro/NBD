@@ -11,8 +11,12 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import parser.LecturerExport;
 import table.LecturerTable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -40,6 +44,8 @@ public class LecturerController {
 
     @FXML
     private Button showButton;
+    @FXML
+    private Button downloadLect;
 
     @FXML
     private TableView<LecturerTable> lecturerTable;
@@ -91,7 +97,12 @@ public class LecturerController {
 
 
 
-    private void choiceBoxesFill() {
+    public void choiceBoxesFill() {
+        lecturerNameChoice.getItems().clear();
+        weeksChoice.getItems().clear();
+        specChoice.getItems().clear();
+        courseChoice.getItems().clear();
+        scheduleChoice.getItems().clear();
         queries = new DBQueriesImpl();
         ArrayList<Lecturer> lecturers = queries.getAllLecturers();
         ObservableList<String> lecturersFX = FXCollections.observableArrayList();
@@ -193,7 +204,6 @@ public class LecturerController {
         }
 
         ArrayList<Schedule> scedule = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(lect,wee,spec,cours,disp);
-        System.out.println("dick"+scedule);
         ArrayList<Day> days = queries.getAllDays();
         HashMap<Day,ArrayList<Schedule>> dayScheduleHashMap = new HashMap<>();
         for (Day day : days) {
@@ -205,5 +215,16 @@ public class LecturerController {
         }
 
         return dayScheduleHashMap;
+    }
+
+    public void downloadLecturer(ActionEvent actionEvent) {
+        Lecturer lect = queries.getLecturerByName(lecturerNameChoice.getSelectionModel().getSelectedItem());
+        Week wee = queries.getWeekByNumber(weeksChoice.getSelectionModel().getSelectedItem());
+        ArrayList<Schedule> schedules = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(lect,wee,null,null,null);
+        DirectoryChooser chooser = new DirectoryChooser();
+        File showDialog = chooser.showDialog(new Stage());
+        String path = showDialog.getPath()+"/"+lect.getName()+".xlsx";
+        LecturerExport.export(lect,wee,schedules,path);
+
     }
 }
