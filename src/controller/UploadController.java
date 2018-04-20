@@ -27,9 +27,9 @@ public class UploadController {
     private ObservableList<UploadTable> scheduleErrors = FXCollections.observableArrayList();
     private DBQueriesImpl queries ;
     private ExcelParser parser;
-    private LecturerController lecturerController;
-    private StudentController studentController;
-    private LaborantController laborantController;
+    private LecturerController lecturerController = new LecturerController();
+    private StudentController studentController = new StudentController();
+    private LaborantController laborantController = new LaborantController();
 
 
     @FXML
@@ -40,6 +40,7 @@ public class UploadController {
 
     @FXML
     private Button deleteButton;
+
 
     @FXML
     private Button checkButton;
@@ -85,6 +86,7 @@ public class UploadController {
     @FXML
     private void initialize() {
         initData();
+        checkButton.setVisible(false);
 
         idError.setCellValueFactory(new PropertyValueFactory<Schedule, Integer>("id"));
         yearError.setCellValueFactory(new PropertyValueFactory<Schedule, Integer>("year"));
@@ -104,10 +106,10 @@ public class UploadController {
     private void initData() {
         try {
             queries = new DBQueriesImpl();
-            ArrayList<Schedule> schedules = queries.getScheduleErrors();
+            //ArrayList<Schedule> schedules = queries.getScheduleErrors();
+            ArrayList<Schedule> schedules = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(null, null, null, null, null);
             for (Schedule sced : schedules) {
                 UploadTable tableUpload = new UploadTable(sced);
-
                 scheduleErrors.add(tableUpload);
             }
         }
@@ -144,9 +146,9 @@ public class UploadController {
             String curFilePath = path + "\\" + fileName;
             ExcelParser.parse(curFilePath, queries);
         }
-        lecturerController.choiceBoxesFill();
-        studentController.choiceBoxesFill();
-        laborantController.choiceBoxFill();
+//        lecturerController.choiceBoxesFill();
+//        studentController.choiceBoxesFill();
+//        laborantController.choiceBoxFill();
 
     }
 

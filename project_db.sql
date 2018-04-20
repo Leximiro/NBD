@@ -79,6 +79,8 @@ discipline_id INT(11) NOT NULL,
 class_type_id INT(11) NOT NULL,
 teacher_id INT(11) NOT NULL,
 group_number VARCHAR(256) NULL,
+CONSTRAINT s_c UNIQUE (day_name_id,class_period_id,classroom_id),
+CONSTRAINT s_t UNIQUE (day_name_id,class_period_id,teacher_id),
 FOREIGN KEY (specialty_id) REFERENCES specialty(id)
 	ON UPDATE CASCADE
 	ON DELETE CASCADE,

@@ -212,7 +212,8 @@ public class StudentController {
         DirectoryChooser chooser = new DirectoryChooser();
         File showDialog = chooser.showDialog(new Stage());
         String path = showDialog.getPath()+"/"+spec.getName()+".xlsx";
-        StudentExport.export(spec,cours,queries.getWeekByNumber(scedule.get(1).getWeekNumber()),scedule,path);
+        if(scedule.size()>0)
+            StudentExport.export(spec,cours,queries.getWeekByNumber(scedule.get(1).getWeekNumber()),scedule,path);
 
 
     }

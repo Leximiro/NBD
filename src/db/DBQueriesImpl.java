@@ -6,8 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Properties;
 
+import com.sun.org.apache.bcel.internal.generic.ALOAD;
 import entity.*;
 
 public class DBQueriesImpl implements DBQueries {
@@ -349,7 +352,7 @@ public class DBQueriesImpl implements DBQueries {
 			pst.setInt(2, scheduleWeek.getWeek().getId());
 			pst.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("ВИЯВЛЕНО СУПЕРЕЧНІСТЬ В РОЗКЛАДІ! " + scheduleWeek.getSchedule().toString());
 		}
 	}
 
@@ -926,21 +929,19 @@ public class DBQueriesImpl implements DBQueries {
 		ResultSet res = null;
         try {
         	Connection conn = DBConnector.getConnection();
-        	ArrayList<ScheduleDTO> dtos = new ArrayList<ScheduleDTO>();
-            PreparedStatement pst0 = conn.prepareStatement(""+
-							"SELECT day_name_id, class_period_id, weeks._number " +
-							"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id "
-							+ "INNER JOIN weeks ON schedule_week.weeks_id = weeks.id "
-							+ "INNER JOIN classroom ON classroom_id = classroom.id " +
-							"GROUP BY day_name_id, class_period_id, teacher_id, weeks._number " +
-							"HAVING count(*) > 1 "
-							+ "UNION ALL " +
-							"SELECT day_name_id, class_period_id, weeks._number " +
-							"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id "
-							+ "INNER JOIN weeks ON schedule_week.weeks_id = weeks.id "
-							+ "INNER JOIN classroom ON classroom_id = classroom.id " +
-							"GROUP BY day_name_id, class_period_id, classroom_id, weeks._number " +
-							"HAVING count(*) > 1");
+			HashSet<ScheduleDTO> dtos = new HashSet<ScheduleDTO>();
+            PreparedStatement pst0 = conn.prepareStatement("SELECT u.day_name_id, u.class_period_id, weeks._number AS nnn " +
+					"FROM schedule u INNER JOIN schedule_week ON u.id = schedule_week.schedule_id " +
+					"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
+					"INNER JOIN (" +
+					"SELECT day_name_id, class_period_id, weeks._number AS nnn, COUNT(*) " +
+					"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
+					"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
+					"GROUP BY day_name_id, class_period_id, teacher_id, weeks._number " +
+					"HAVING COUNT(*) > 1) temp " +
+					"ON temp.day_name_id = u.day_name_id " +
+					"AND temp.class_period_id = u.class_period_id " +
+					"AND temp.nnn= nnn");
             res0 = pst0.executeQuery();
             while (res0.next()) {
             	ScheduleDTO dto = new ScheduleDTO();
@@ -949,9 +950,31 @@ public class DBQueriesImpl implements DBQueries {
 				dto.weeks_number = res0.getInt(3);
 				dtos.add(dto);
             }
+			System.out.println(dtos.size());
+			pst0 = conn.prepareStatement("SELECT u.day_name_id, u.class_period_id, weeks._number AS nnn " +
+					"FROM schedule u INNER JOIN schedule_week ON u.id = schedule_week.schedule_id " +
+					"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
+					"INNER JOIN (" +
+					"SELECT day_name_id, class_period_id, weeks._number AS nnn, COUNT(*) " +
+					"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
+					"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
+					"GROUP BY day_name_id, class_period_id, classroom_id, weeks._number " +
+					"HAVING COUNT(*) > 1) temp " +
+					"ON temp.day_name_id = u.day_name_id " +
+					"AND temp.class_period_id = u.class_period_id " +
+					"AND temp.nnn= nnn");
+			res0 = pst0.executeQuery();
+			while (res0.next()) {
+				ScheduleDTO dto = new ScheduleDTO();
+				dto.day_name_id = res0.getInt(1);
+				dto.class_period_id = res0.getInt(2);
+				dto.weeks_number = res0.getInt(3);
+				dtos.add(dto);
+			}
+			System.out.println(dtos.size());
 			pst0.close();
 
-            if(dtos.size()>1){
+            if(dtos.size()>0){
 				StringBuilder stringBuilder = new StringBuilder("");
 				for(ScheduleDTO s : dtos)
 					stringBuilder.append("?,");
@@ -959,7 +982,7 @@ public class DBQueriesImpl implements DBQueries {
 					stringBuilder.setLength(stringBuilder.length() - 1);
 				String inPart = stringBuilder.toString();
 
-				String SQL = "SELECT schedule.*, weeks._number FROM " +
+				String SQL = "SELECT schedule.*, weeks._number " +
 						"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
 						"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
 						"WHERE day_name_id IN ("+inPart+") AND class_period_id IN ("+inPart+") AND weeks._number IN ("+inPart+")";
@@ -972,6 +995,7 @@ public class DBQueriesImpl implements DBQueries {
 					pst.setInt(counter++, s.class_period_id);
 				for(ScheduleDTO s : dtos)
 					pst.setInt(counter++, s.weeks_number);
+				System.out.println(SQL);
 				res = pst.executeQuery();
 				while (res.next()) {
 					Schedule schedule = new Schedule();
@@ -1081,4 +1105,20 @@ class DBConnector{
 
 class ScheduleDTO {
 	protected Integer day_name_id, class_period_id, weeks_number;
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ScheduleDTO)) return false;
+		ScheduleDTO that = (ScheduleDTO) o;
+		return Objects.equals(day_name_id, that.day_name_id) &&
+				Objects.equals(class_period_id, that.class_period_id) &&
+				Objects.equals(weeks_number, that.weeks_number);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(day_name_id, class_period_id, weeks_number);
+	}
 }
