@@ -13,7 +13,6 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import parser.InvalidInputFileException;
-import parser.ParserAlgorithmException;
 import table.UploadTable;
 
 import java.io.File;
@@ -122,7 +121,7 @@ public class UploadController {
 
 
 
-    public void uploadSchedule(javafx.event.ActionEvent actionEvent) throws ParserAlgorithmException, IOException, InvalidInputFileException {
+    public void uploadSchedule(javafx.event.ActionEvent actionEvent) throws IOException, InvalidInputFileException {
         System.out.println("upload");
         queries = new DBQueriesImpl();
         DirectoryChooser chooser = new DirectoryChooser();

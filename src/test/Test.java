@@ -20,6 +20,7 @@ public class Test {
         // DB queries tests
         DBQueriesImpl db = new DBQueriesImpl();
 //        initClassrooms(db);
+//        db.cleanDB();
 //		db.getScheduleErrors();
 //		System.out.println(db.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(null,null,null,null,null));
 //		System.out.println(db.getScheduleByBuildingAndClassroomTypeAndClassroomNumber(1,false,false,false,null));
