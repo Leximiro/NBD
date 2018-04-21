@@ -5,20 +5,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 
 import com.sun.org.apache.bcel.internal.generic.ALOAD;
 import entity.*;
 
-public class DBQueriesImpl implements DBQueries {
+public class DBQueriesImpl {
 	
 	public DBQueriesImpl() {
 	}
-	
-	@Override
+
 	public int getNumberOfClasses() {
 		int amount = 0;
 		ResultSet res = null;
@@ -36,7 +32,6 @@ public class DBQueriesImpl implements DBQueries {
 		return amount;
 	}
 
-	@Override
 	public void cleanDB() {
 		try {
 			Connection conn = DBConnector.getConnection();
@@ -65,8 +60,7 @@ public class DBQueriesImpl implements DBQueries {
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
+
 	public Day getDayByName(String name) {
 		Day day = new Day();
 		boolean exists = false;
@@ -90,8 +84,7 @@ public class DBQueriesImpl implements DBQueries {
 		else
 			return null;
 	}
-	
-	@Override
+
 	public Specialization getSpecializationByName(String name) {
 		Specialization specialization = new Specialization();
 		boolean exists = false;
@@ -116,7 +109,6 @@ public class DBQueriesImpl implements DBQueries {
 			return null;
 	}
 
-	@Override
 	public void addSpecialization(Specialization specialization) {
 		try {
 			Connection conn = DBConnector.getConnection();
@@ -133,7 +125,6 @@ public class DBQueriesImpl implements DBQueries {
 		}
 	}
 
-	@Override
 	public Discipline getDisciplineByName(String name) {
 		Discipline discipline = new Discipline();
 		boolean exists = false;
@@ -158,7 +149,6 @@ public class DBQueriesImpl implements DBQueries {
 			return null;
 	}
 
-	@Override
 	public void addDiscipline(Discipline discipline) {
 		try {
 			Connection conn = DBConnector.getConnection();
@@ -175,7 +165,6 @@ public class DBQueriesImpl implements DBQueries {
 		}
 	}
 
-	@Override
 	public Lecturer getLecturerByName(String name) {
 		Lecturer lecturer = new Lecturer();
 		boolean exists = false;
@@ -201,13 +190,15 @@ public class DBQueriesImpl implements DBQueries {
 			return null;
 	}
 
-	@Override
 	public void addLecturer(Lecturer lecturer) {
 		try {
 			Connection conn = DBConnector.getConnection();
 			PreparedStatement pst = conn.prepareStatement("INSERT INTO teacher(name, degree) VALUES(?, ?)");
 			pst.setString(1, lecturer.getName());
-			pst.setString(2, lecturer.getDegree());
+			if(lecturer.getDegree()!=null)
+				pst.setString(2, lecturer.getDegree());
+			else
+				pst.setString(2, " ");
 			pst.executeUpdate();
 			
 			ResultSet rs = pst.getGeneratedKeys();
@@ -218,8 +209,7 @@ public class DBQueriesImpl implements DBQueries {
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
+
 	public void addClassroom(Classroom classroom) {
 		try {
 			Connection conn = DBConnector.getConnection();
@@ -242,7 +232,6 @@ public class DBQueriesImpl implements DBQueries {
 		}
 	}
 
-	@Override
 	public Week getWeekByNumber(int number) {
 		Week week = new Week();
 		boolean exists = false;
@@ -269,8 +258,33 @@ public class DBQueriesImpl implements DBQueries {
 			return null;
 	}
 
+	private ArrayList<Week> getWeeksByScheduleId(int id) {
+		ArrayList<Week> weeks = new ArrayList<Week>();
+		ResultSet res = null;
+		try {
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM weeks " +
+					"INNER JOIN schedule_week ON weeks.id = schedule_week.weeks_id " +
+					"WHERE schedule_week.schedule_id = ? " +
+					"ORDER BY _number");
+			pst.setInt(1, id);
+			res = pst.executeQuery();
+			while (res.next()) {
+				Week week = new Week();
+				week.setId(res.getInt(1));
+				week.setNumber(res.getInt(2));
+				week.setStartDate(res.getDate(3));
+				week.setEndDate(res.getDate(4));
+				weeks.add(week);
+			}
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return weeks;
+	}
+
 	//TODO add dates.
-	@Override
 	public void addWeek(Week week) {
 		try {
 			Connection conn = DBConnector.getConnection();
@@ -282,7 +296,6 @@ public class DBQueriesImpl implements DBQueries {
 		}
 	}
 
-	@Override
 	public Classroom getClassroomByNumber(String number) {
 		Classroom classroom = new Classroom();
 		boolean exists = false;
@@ -311,11 +324,53 @@ public class DBQueriesImpl implements DBQueries {
 		else
 			return null;
 	}
-
-	@Override
+	
 	public void addSchedule(Schedule schedule) {
 		try {
 			Connection conn = DBConnector.getConnection();
+
+			HashSet<Integer> schedulesIdsWithErrors = new HashSet<Integer>();
+			boolean isError = false;
+
+			StringBuilder inPart = new StringBuilder("");
+			for(Week w : schedule.getWeeks()){
+				inPart.append(String.valueOf(w.getId())+",");
+			}
+			if(inPart.length() > 1)
+				inPart.setLength(inPart.length() - 1);
+
+			PreparedStatement pstCheck1 = conn.prepareStatement("" +
+					"SELECT schedule_id " +
+					"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
+								"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
+					"WHERE day_name_id = ? " +
+					  "AND class_period_id = ? " +
+					  "AND teacher_id = ? " +
+					  "AND weeks_id IN ("+inPart.toString()+")");
+			pstCheck1.setInt(1, schedule.getDay().getId());
+			pstCheck1.setInt(2, schedule.getPeriod().getId());
+			pstCheck1.setInt(3, schedule.getLecturer().getId());
+			ResultSet res1 = pstCheck1.executeQuery();
+			while (res1.next()) {
+				schedulesIdsWithErrors.add(res1.getInt(1));
+			}
+			PreparedStatement pstCheck2 = conn.prepareStatement("" +
+					"SELECT schedule_id " +
+					"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
+					"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
+					"WHERE day_name_id = ? " +
+					"AND class_period_id = ? " +
+					"AND classroom_id = ? " +
+					"AND classroom_id IS NOT NULL " +
+					"AND weeks_id IN ("+inPart.toString()+")");
+			pstCheck2.setInt(1, schedule.getDay().getId());
+			pstCheck2.setInt(2, schedule.getPeriod().getId());
+			pstCheck2.setInt(3, schedule.getClassroom().getId());
+			ResultSet res2 = pstCheck1.executeQuery();
+			while (res2.next()) {
+				schedulesIdsWithErrors.add(res2.getInt(1));
+			}
+
 			PreparedStatement pst = conn.prepareStatement("INSERT INTO "
 					+ "schedule(course, specialty_id, day_name_id, class_period_id, classroom_id, discipline_id, class_type_id, teacher_id, group_number) "
 					+ "VALUES(?,?,?,?,?,?,?,?,?)");
@@ -338,21 +393,26 @@ public class DBQueriesImpl implements DBQueries {
 			if (rs.next()) {
 				schedule.setId(rs.getInt(1));
 			}
+
+			if(schedulesIdsWithErrors.size()>0){
+				schedulesIdsWithErrors.add(schedule.getId());
+				addErrors(new ArrayList<>(schedulesIdsWithErrors));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	@Override
-	public void ScheduleWeek(ScheduleWeek scheduleWeek) {
-		try {
-			Connection conn = DBConnector.getConnection();
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO schedule_week(schedule_id, weeks_id) VALUES(?, ?)");
-			pst.setInt(1, scheduleWeek.getSchedule().getId());
-			pst.setInt(2, scheduleWeek.getWeek().getId());
-			pst.executeUpdate();
+	private void addErrors(ArrayList<Integer> schedulesIdsWithErrors) {
+		Connection conn = DBConnector.getConnection();
+		try{
+			for (Integer i : schedulesIdsWithErrors){
+				PreparedStatement pst = conn.prepareStatement("INSERT INTO errors(schedule_id) VALUES(?)");
+				pst.setInt(1, i);
+				pst.executeUpdate();
+			}
 		} catch (SQLException e) {
-			System.out.println("ВИЯВЛЕНО СУПЕРЕЧНІСТЬ В РОЗКЛАДІ! " + scheduleWeek.getSchedule().toString());
+			e.printStackTrace();
 		}
 	}
 
@@ -384,6 +444,8 @@ public class DBQueriesImpl implements DBQueries {
 					Lecturer lecturer = getLecturerById(res.getInt(9));
 				schedule.setLecturer(lecturer);
 				schedule.setGroup(res.getString(10));
+				ArrayList<Week> weeks = getWeeksByScheduleId(schedule.getId());
+				schedule.setWeeks(weeks);
 			}
 			pst.close();
 		} catch (SQLException e) {
@@ -625,44 +687,19 @@ public class DBQueriesImpl implements DBQueries {
 			return null;
 	}
 
-	@Override
-	public ArrayList<ScheduleWeek> getAllScheduleWeeks() {
-		ArrayList<ScheduleWeek> scheduleWeeks = new ArrayList<ScheduleWeek>();
-		ResultSet res = null;
-        try {
-        	Connection conn = DBConnector.getConnection();
-            PreparedStatement pst = conn.prepareStatement("SELECT * FROM schedule_week");
-            res = pst.executeQuery();
-            while (res.next()) {
-            	ScheduleWeek scheduleWeek = new ScheduleWeek();
-            	scheduleWeek.setId(res.getInt(1));
-            	Schedule schedule = getScheduleById(res.getInt(2));
-            	Week week = getWeekById(res.getInt(3));
-            	scheduleWeek.setSchedule(schedule);
-            	scheduleWeek.setWeek(week);
-            	scheduleWeeks.add(scheduleWeek);
-            }
-            pst.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return scheduleWeeks;
-	}
-
-	@Override
 	public ArrayList<Lecturer> getAllLecturers(){
 		ArrayList<Lecturer> lecturers = new ArrayList<Lecturer>();
 		ResultSet res = null;
         try {
         	Connection conn = DBConnector.getConnection();
-            PreparedStatement pst = conn.prepareStatement("SELECT * FROM teacher");
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM teacher ORDER BY name");
             res = pst.executeQuery();
             while (res.next()) {
             	Lecturer lecturer = new Lecturer();
             	lecturer.setId(res.getInt(1));
 				lecturer.setName(res.getString(2));
 				lecturer.setDegree(res.getString(3));
-				System.out.println(lecturer.getDegree());
+				//System.out.println(lecturer.getDegree());
             	lecturers.add(lecturer);
             }
             pst.close();
@@ -672,13 +709,12 @@ public class DBQueriesImpl implements DBQueries {
         return lecturers;
 	}
 
-	@Override
 	public ArrayList<Week> getAllWeeks(){
 		ArrayList<Week> weeks = new ArrayList<Week>();
 		ResultSet res = null;
         try {
         	Connection conn = DBConnector.getConnection();
-            PreparedStatement pst = conn.prepareStatement("SELECT * FROM weeks");
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM weeks ORDER BY _number");
             res = pst.executeQuery();
             while (res.next()) {
             	Week week = new Week();
@@ -695,13 +731,12 @@ public class DBQueriesImpl implements DBQueries {
         return weeks;
 	}
 
-	@Override
 	public ArrayList<Specialization> getAllSpecializations(){
 		ArrayList<Specialization> specializations = new ArrayList<Specialization>();
 		ResultSet res = null;
         try {
         	Connection conn = DBConnector.getConnection();
-            PreparedStatement pst = conn.prepareStatement("SELECT * FROM specialty");
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM specialty ORDER BY name");
             res = pst.executeQuery();
             while (res.next()) {
             	Specialization specialization = new Specialization();
@@ -715,14 +750,13 @@ public class DBQueriesImpl implements DBQueries {
         }
         return specializations;
 	}
-	
-	@Override
+
 	public ArrayList<Integer> getAllCourses(){
 		ArrayList<Integer> courses = new ArrayList<Integer>();
 		ResultSet res = null;
         try {
         	Connection conn = DBConnector.getConnection();
-            PreparedStatement pst = conn.prepareStatement("SELECT DISTINCT course FROM schedule");
+            PreparedStatement pst = conn.prepareStatement("SELECT DISTINCT course FROM schedule ORDER BY course");
             res = pst.executeQuery();
             while (res.next()) {
             	courses.add(res.getInt(1));
@@ -733,14 +767,13 @@ public class DBQueriesImpl implements DBQueries {
         }
         return courses;
 	}
-	
-	@Override
+
 	public ArrayList<Discipline> getAllDisciplines(){
 		ArrayList<Discipline> disciplines = new ArrayList<Discipline>();
 		ResultSet res = null;
         try {
         	Connection conn = DBConnector.getConnection();
-            PreparedStatement pst = conn.prepareStatement("SELECT * FROM discipline");
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM discipline ORDER BY name");
             res = pst.executeQuery();
             while (res.next()) {
             	Discipline discipline = new Discipline();
@@ -754,13 +787,12 @@ public class DBQueriesImpl implements DBQueries {
         }
         return disciplines;
 	}
-	
-	@Override
+
 	public ArrayList<Schedule> getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(
 			Lecturer lecturer, Week week, Specialization specialization, Integer course, Discipline discipline){
 		
 		StringBuilder query = new StringBuilder(""
-        		+ "SELECT schedule.id, course, specialty_id, day_name_id, class_period_id, classroom_id, discipline_id, class_type_id, teacher_id, group_number, weeks._number "
+        		+ "SELECT schedule.id, course, specialty_id, day_name_id, class_period_id, classroom_id, discipline_id, class_type_id, teacher_id, group_number, weeks.id "
         		+ "FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id "
         					  + "INNER JOIN weeks ON schedule_week.weeks_id = weeks.id "
         	    + "WHERE ");
@@ -796,7 +828,9 @@ public class DBQueriesImpl implements DBQueries {
 					Lecturer lectur = getLecturerById(res.getInt(9));
 				schedule.setLecturer(lectur);
 				schedule.setGroup(res.getString(10));
-            	schedule.setWeekNumber(res.getInt(11));
+				ArrayList<Week> weeks = new ArrayList<Week>();
+				weeks.add(getWeekById(res.getInt(11)));
+            	schedule.setWeeks(weeks);
             	schedules.add(schedule);
             }
             pst.close();
@@ -806,15 +840,12 @@ public class DBQueriesImpl implements DBQueries {
         return schedules;
 	}
 
-	@Override
 	public ArrayList<Schedule> getScheduleByBuildingAndClassroomTypeAndClassroomNumber(
 			Integer building, Boolean board, Boolean comps, Boolean projector, String number){
 				
 		StringBuilder query = new StringBuilder(""
-        		+ "SELECT schedule.id, course, specialty_id, day_name_id, class_period_id, classroom_id, discipline_id, class_type_id, teacher_id, group_number, weeks._number "
-        		+ "FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id "
-        					  + "INNER JOIN weeks ON schedule_week.weeks_id = weeks.id "
-        					  + "INNER JOIN classroom ON classroom_id = classroom.id "
+        		+ "SELECT schedule.id, course, specialty_id, day_name_id, class_period_id, classroom_id, discipline_id, class_type_id, teacher_id, group_number "
+        		+ "FROM schedule INNER JOIN classroom ON classroom_id = classroom.id "
         	    + "WHERE ");
 		
 		query.append((building==null) 		? 	"building = building AND " 					: 		"building = " 			+ building + " AND ");
@@ -848,7 +879,8 @@ public class DBQueriesImpl implements DBQueries {
 					Lecturer lectur = getLecturerById(res.getInt(9));
 				schedule.setLecturer(lectur);
 				schedule.setGroup(res.getString(10));
-            	schedule.setWeekNumber(res.getInt(11));
+				ArrayList<Week> weeks = getWeeksByScheduleId(schedule.getId());
+				schedule.setWeeks(weeks);
             	schedules.add(schedule);
             }
             pst.close();
@@ -858,7 +890,6 @@ public class DBQueriesImpl implements DBQueries {
         return schedules;
 	}
 
-	@Override
 	public ArrayList<Integer> getAllBuildings(){
 		ArrayList<Integer> buildings = new ArrayList<Integer>();
 		ResultSet res = null;
@@ -876,13 +907,12 @@ public class DBQueriesImpl implements DBQueries {
         return buildings;
 	}
 
-	@Override
 	public ArrayList<Classroom> getAllClassrooms(){
 		ArrayList<Classroom> classrooms = new ArrayList<Classroom>();
 		ResultSet res = null;
         try {
         	Connection conn = DBConnector.getConnection();
-            PreparedStatement pst = conn.prepareStatement("SELECT * FROM classroom");
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM classroom ORDER BY building");
             res = pst.executeQuery();
             while (res.next()) {
             	Classroom classroom = new Classroom();
@@ -901,8 +931,7 @@ public class DBQueriesImpl implements DBQueries {
         }
         return classrooms;
 	}
-	
-	@Override
+
 	public ArrayList<ClassType> getAllClassTypes(){
 		ArrayList<ClassType> classTypes = new ArrayList<ClassType>();
 		ResultSet res = null;
@@ -923,117 +952,67 @@ public class DBQueriesImpl implements DBQueries {
         return classTypes;
 	}
 
-	@Override
 	public ArrayList<Schedule> getScheduleErrors(){
 		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
-		ResultSet res0 = null;
 		ResultSet res = null;
-        try {
-        	Connection conn = DBConnector.getConnection();
-			HashSet<ScheduleDTO> dtos = new HashSet<ScheduleDTO>();
-            PreparedStatement pst0 = conn.prepareStatement("SELECT u.day_name_id, u.class_period_id, weeks._number AS nnn " +
-					"FROM schedule u INNER JOIN schedule_week ON u.id = schedule_week.schedule_id " +
-					"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
-					"INNER JOIN (" +
-					"SELECT day_name_id, class_period_id, weeks._number AS nnn, COUNT(*) " +
-					"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
-					"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
-					"GROUP BY day_name_id, class_period_id, teacher_id, weeks._number " +
-					"HAVING COUNT(*) > 1) temp " +
-					"ON temp.day_name_id = u.day_name_id " +
-					"AND temp.class_period_id = u.class_period_id " +
-					"AND temp.nnn= nnn");
-            res0 = pst0.executeQuery();
-            while (res0.next()) {
-            	ScheduleDTO dto = new ScheduleDTO();
-            	dto.day_name_id = res0.getInt(1);
-				dto.class_period_id = res0.getInt(2);
-				dto.weeks_number = res0.getInt(3);
-				dtos.add(dto);
-            }
-			System.out.println(dtos.size());
-			pst0 = conn.prepareStatement("SELECT u.day_name_id, u.class_period_id, weeks._number AS nnn " +
-					"FROM schedule u INNER JOIN schedule_week ON u.id = schedule_week.schedule_id " +
-					"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
-					"INNER JOIN (" +
-					"SELECT day_name_id, class_period_id, weeks._number AS nnn, COUNT(*) " +
-					"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
-					"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
-					"GROUP BY day_name_id, class_period_id, classroom_id, weeks._number " +
-					"HAVING COUNT(*) > 1) temp " +
-					"ON temp.day_name_id = u.day_name_id " +
-					"AND temp.class_period_id = u.class_period_id " +
-					"AND temp.nnn= nnn");
-			res0 = pst0.executeQuery();
-			while (res0.next()) {
-				ScheduleDTO dto = new ScheduleDTO();
-				dto.day_name_id = res0.getInt(1);
-				dto.class_period_id = res0.getInt(2);
-				dto.weeks_number = res0.getInt(3);
-				dtos.add(dto);
+		try {
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pst = conn.prepareStatement("SELECT schedule.* FROM errors " +
+					 										  "INNER JOIN schedule ON errors.schedule_id = schedule.id");
+			res = pst.executeQuery();
+			while (res.next()) {
+				Schedule schedule = new Schedule();
+				schedule.setId(res.getInt(1));
+				schedule.setYear(res.getInt(2));
+				Specialization specialization = getSpecializationById(res.getInt(3));
+				schedule.setSpecialization(specialization);
+				Day day = getDayById(res.getInt(4));
+				schedule.setDay(day);
+				Period period = new Period(res.getInt(5), res.getInt(5));
+				schedule.setPeriod(period);
+				Classroom classroom = getClassroomById(res.getInt(6));
+				schedule.setClassroom(classroom);
+				Discipline discipline = getDisciplineById(res.getInt(7));
+				schedule.setDiscipline(discipline);
+				ClassType classType = getClassTypeById(res.getInt(8));
+				schedule.setClassType(classType);
+				Lecturer lecturer = getLecturerById(res.getInt(9));
+				schedule.setLecturer(lecturer);
+				schedule.setGroup(res.getString(10));
+				ArrayList<Week> weeks = getWeeksByScheduleId(schedule.getId());
+				schedule.setWeeks(weeks);
+				schedules.add(schedule);
 			}
-			System.out.println(dtos.size());
-			pst0.close();
-
-            if(dtos.size()>0){
-				StringBuilder stringBuilder = new StringBuilder("");
-				for(ScheduleDTO s : dtos)
-					stringBuilder.append("?,");
-				if(stringBuilder.length() > 1)
-					stringBuilder.setLength(stringBuilder.length() - 1);
-				String inPart = stringBuilder.toString();
-
-				String SQL = "SELECT schedule.*, weeks._number " +
-						"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
-						"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
-						"WHERE day_name_id IN ("+inPart+") AND class_period_id IN ("+inPart+") AND weeks._number IN ("+inPart+")";
-
-				PreparedStatement pst = conn.prepareStatement(SQL);
-				int counter = 1;
-				for(ScheduleDTO s : dtos)
-					pst.setInt(counter++, s.day_name_id);
-				for(ScheduleDTO s : dtos)
-					pst.setInt(counter++, s.class_period_id);
-				for(ScheduleDTO s : dtos)
-					pst.setInt(counter++, s.weeks_number);
-				System.out.println(SQL);
-				res = pst.executeQuery();
-				while (res.next()) {
-					Schedule schedule = new Schedule();
-					schedule.setId(res.getInt(1));
-					schedule.setYear(res.getInt(2));
-					Specialization special = getSpecializationById(res.getInt(3));
-					schedule.setSpecialization(special);
-					Day day = getDayById(res.getInt(4));
-					schedule.setDay(day);
-					Period period = new Period(res.getInt(5), res.getInt(5));
-					schedule.setPeriod(period);
-					Classroom classroom = getClassroomById(res.getInt(6));
-					schedule.setClassroom(classroom);
-					Discipline discipl = getDisciplineById(res.getInt(7));
-					schedule.setDiscipline(discipl);
-					ClassType classType = getClassTypeById(res.getInt(8));
-					schedule.setClassType(classType);
-					Lecturer lectur = getLecturerById(res.getInt(9));
-					schedule.setLecturer(lectur);
-					schedule.setGroup(res.getString(10));
-					schedule.setWeekNumber(res.getInt(11));
-					schedules.add(schedule);
-				}
-			}
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
         return schedules;
 	}
-	
-	@Override
+
+	public ArrayList<Integer> getScheduleIdsWithErrors(){
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		ResultSet res = null;
+		try {
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pst = conn.prepareStatement("SELECT schedule_id FROM errors");
+			res = pst.executeQuery();
+			while (res.next()) {
+				ids.add(res.getInt(1));
+			}
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ids;
+	}
+
 	public ArrayList<Day> getAllDays(){
 		ArrayList<Day> days = new ArrayList<Day>();
 		ResultSet res = null;
 		try {
 			Connection conn = DBConnector.getConnection();
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM day_name");
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM day_name ORDER BY id");
 			res = pst.executeQuery();
 			while (res.next()) {
 				Day day = new Day();
@@ -1072,13 +1051,24 @@ public class DBQueriesImpl implements DBQueries {
 			return null;
 	}
 
+	public void ScheduleWeek(int scheduleId, int weekId) {
+		try {
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO schedule_week(schedule_id, weeks_id) VALUES(?, ?)");
+			pst.setInt(1, scheduleId);
+			pst.setInt(2, weekId);
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("!!!");
+		}
+	}
 }
 
 class DBConnector{
 
 	private static final String url = "jdbc:mysql://localhost:3306/nbd";
 	private static final String user = "root";
-	private static final String password = "root";
+	private static final String password = "";
 	public static Connection con = null;
 	private static Properties properties = new Properties();
 
@@ -1100,26 +1090,5 @@ class DBConnector{
 			}
 		}
 		return con;
-	}
-	
-}
-
-class ScheduleDTO {
-	protected Integer day_name_id, class_period_id, weeks_number;
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof ScheduleDTO)) return false;
-		ScheduleDTO that = (ScheduleDTO) o;
-		return Objects.equals(day_name_id, that.day_name_id) &&
-				Objects.equals(class_period_id, that.class_period_id) &&
-				Objects.equals(weeks_number, that.weeks_number);
-	}
-
-	@Override
-	public int hashCode() {
-
-		return Objects.hash(day_name_id, class_period_id, weeks_number);
 	}
 }

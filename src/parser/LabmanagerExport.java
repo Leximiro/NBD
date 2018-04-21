@@ -1,6 +1,5 @@
 package parser;
 
-import db.DBQueries;
 import db.DBQueriesImpl;
 import entity.*;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -123,7 +122,7 @@ public class LabmanagerExport {
     }
 
     public static void main(String[] args) {
-        DBQueries queries = new DBQueriesImpl();
+        DBQueriesImpl queries = new DBQueriesImpl();
         ArrayList<Schedule> schedules = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline
                 (null, null, null, null, null);
         export(new Week(8, 8), schedules, "E:\\meport.xlsx");

@@ -110,13 +110,12 @@ public class ExcelParser {
                 }
 
                 Schedule schedule = new Schedule(year, classType.getName().equalsIgnoreCase("лекція") ? null : groupCell,
-                        specialization, discipline, lecturer, day, period, classroom, classType);
+                        specialization, discipline, lecturer, day, period, classroom, classType, weeks);
 
                 db.addSchedule(schedule);
 
                 for (int t = 0; t < weeks.size(); t++) {
-                    ScheduleWeek scheduleWeek = new ScheduleWeek(schedule, weeks.get(t));
-                    db.ScheduleWeek(scheduleWeek);
+                    db.ScheduleWeek(schedule.getId(), weeks.get(t).getId());
                 }
 
                 weeks.clear();

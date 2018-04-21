@@ -1,6 +1,9 @@
 package table;
 
 import entity.Schedule;
+import entity.Week;
+
+import java.util.ArrayList;
 
 public class UploadTable {
     private int id;
@@ -14,7 +17,7 @@ public class UploadTable {
     private int period;
     private String classroom;
     private String classType;
-    private int weekNumber;
+    private ArrayList<Week> weeks;
 
 
     public int getId() {
@@ -57,8 +60,8 @@ public class UploadTable {
         return classType;
     }
 
-    public int getWeekNumber() {
-        return weekNumber;
+    public ArrayList<Week> getWeeks() {
+        return weeks;
     }
 
     public UploadTable(Schedule schedule){
@@ -72,7 +75,7 @@ public class UploadTable {
         this.period = schedule.getPeriod().getNumber();
         this.classroom = schedule.getClassroom().getNumber();
         this.classType = schedule.getClassType().getName();
-        this.weekNumber = schedule.getWeekNumber();
+        this.weeks = schedule.getWeeks();
 
     }
 
