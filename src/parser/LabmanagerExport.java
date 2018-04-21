@@ -81,7 +81,7 @@ public class LabmanagerExport {
             }
         }
 
-        for (int i = 0; i <= periods.size(); i++){
+        for (int i = 0; i < periods.size() + 2; i++){
             sheet.autoSizeColumn(i);
         }
 
