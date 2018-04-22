@@ -1,5 +1,8 @@
 package entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Schedule {
 	
 	private int id;
@@ -14,7 +17,7 @@ public class Schedule {
 	private Classroom classroom;
 	private ClassType classType;
 	
-	private int weekNumber;
+	private ArrayList<Week> weeks;
 	
 	public Schedule() {}
 	
@@ -50,6 +53,20 @@ public class Schedule {
 		this.period = period;
 		this.classroom = classroom;
 		this.classType = classType;
+	}
+
+	public Schedule(int year, String group, Specialization specialization, Discipline discipline,
+					Lecturer lecturer, Day day, Period period, Classroom classroom, ClassType classType, ArrayList<Week> weeks) {
+		this.year = year;
+		this.group = group;
+		this.specialization = specialization;
+		this.discipline = discipline;
+		this.lecturer = lecturer;
+		this.day = day;
+		this.period = period;
+		this.classroom = classroom;
+		this.classType = classType;
+		this.weeks = weeks;
 	}
 
 	public int getId() {
@@ -132,12 +149,12 @@ public class Schedule {
 		this.classType = classType;
 	}
 	
-	public int getWeekNumber() {
-		return weekNumber;
+	public ArrayList<Week> getWeeks() {
+		return weeks;
 	}
 
-	public void setWeekNumber(int weekNumber) {
-		this.weekNumber = weekNumber;
+	public void setWeeks(ArrayList<Week> weeks) {
+		this.weeks = weeks;
 	}
 
 	@Override

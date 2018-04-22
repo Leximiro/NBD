@@ -2,6 +2,7 @@ package table;
 
 import entity.Day;
 import entity.Schedule;
+import entity.Week;
 
 import java.util.ArrayList;
 
@@ -37,8 +38,15 @@ public class LecturerTable {
     }
 
     private String lessonToString(Schedule schedule){
-        String lesson = "Тижні: "+schedule.getWeekNumber()+"\nПредмет: "+schedule.getDiscipline().getName()+"\nГрупа: "+schedule.getGroup()+"\nАудиторія: "+schedule.getClassroom().getNumber()+"\nСпеціальність:\n"+schedule.getSpecialization().getName();
+        String lesson = "Тижні: "+extractWeeks(schedule.getWeeks())+"\nПредмет: "+schedule.getDiscipline().getName()+"\nГрупа: "+schedule.getGroup()+"\nАудиторія: "+schedule.getClassroom().getNumber()+"\nСпеціальність:\n"+schedule.getSpecialization().getName();
         return lesson;
+    }
+
+    private String extractWeeks(ArrayList<Week> weeks) {
+        StringBuilder res = new StringBuilder("");
+        for(Week w : weeks)
+            res.append(w.getNumber()+" ");
+        return res.toString();
     }
 
     public String getDay() {

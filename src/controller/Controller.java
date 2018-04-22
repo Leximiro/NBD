@@ -1,6 +1,5 @@
 package controller;
 
-import db.DBQueries;
 import db.DBQueriesImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
