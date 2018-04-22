@@ -12,8 +12,6 @@ import entity.Schedule;
 import javafx.stage.FileChooser;
 
 
-import java.io.File;
-import java.util.ArrayList;
 
 
 public class Controller {
@@ -34,5 +32,13 @@ public class Controller {
         lecturerController.init(this);
         uploadController.init(this);
     }
+
+
+    public void refreshCheckBoxes(){
+        laborantController.choiceBoxFill();
+        studentController.choiceBoxesFill();
+        lecturerController.choiceBoxesFill();
+    }
+
 
 }

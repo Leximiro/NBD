@@ -32,13 +32,6 @@ public class UploadController {
     private DBQueriesImpl queries ;
     private ExcelParser parser;
     private Controller main;
-    @FXML
-    LecturerController lecturerController;
-    @FXML
-    StudentController studentController;
-    @FXML
-    LaborantController laborantController;
-
 
 
 
@@ -145,7 +138,12 @@ public class UploadController {
             System.out.println("File: "+fileName + " loaded;");
             File curFile  = new File (path + "\\" + fileName);
             String curFilePath = path + "\\" + fileName;
-            ExcelParser.parse(curFilePath, queries);
+            try{
+                ExcelParser.parse(curFilePath, queries);
+            }catch (InvalidInputFileException e){
+                e.getMessage();
+            }
+
         }
 //        lecturerController.choiceBoxesFill();
 //        studentController.choiceBoxesFill();
@@ -155,6 +153,7 @@ public class UploadController {
         initData();
         tableErrors.setItems(scheduleErrors);
         bdcounter.setText("Кількість записів: "+queries.getNumberOfClasses());
+        main.refreshCheckBoxes();
         wait.setVisible(false);
 
 
@@ -167,6 +166,7 @@ public class UploadController {
         initData();
         tableErrors.setItems(scheduleErrors);
         bdcounter.setText("Кількість записів: "+queries.getNumberOfClasses());
+        main.refreshCheckBoxes();
     }
 
     public void checkSchedule(javafx.event.ActionEvent actionEvent) {

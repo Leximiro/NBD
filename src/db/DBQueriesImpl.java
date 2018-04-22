@@ -39,7 +39,7 @@ public class DBQueriesImpl {
 			PreparedStatement pst = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 0;");
 			pst.executeQuery();
 
-			pst = conn.prepareStatement("TRUNCATE TABLE finals");
+			pst = conn.prepareStatement("TRUNCATE TABLE errors");
 			pst.executeQuery();
 			pst = conn.prepareStatement("TRUNCATE TABLE schedule_week");
 			pst.executeQuery();
