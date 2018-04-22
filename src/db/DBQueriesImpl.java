@@ -365,7 +365,11 @@ public class DBQueriesImpl {
 					"AND weeks_id IN ("+inPart.toString()+")");
 			pstCheck2.setInt(1, schedule.getDay().getId());
 			pstCheck2.setInt(2, schedule.getPeriod().getId());
-			pstCheck2.setInt(3, schedule.getClassroom().getId());
+			if(schedule.getClassroom() == null) {
+				pstCheck2.setString(3, null);
+			} else {
+				pstCheck2.setInt(3, schedule.getClassroom().getId());
+			}
 			ResultSet res2 = pstCheck1.executeQuery();
 			while (res2.next()) {
 				schedulesIdsWithErrors.add(res2.getInt(1));
