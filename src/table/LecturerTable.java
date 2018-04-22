@@ -1,34 +1,33 @@
 package table;
 
 import entity.Day;
+import entity.Period;
 import entity.Schedule;
 import entity.Week;
 
 import java.util.ArrayList;
 
 public class LecturerTable {
-    private String day;
-    private String lesson1;
-    private String lesson2;
-    private String lesson3;
-    private String lesson4;
-    private String lesson5;
-    private String lesson6;
-    private String lesson7;
+    private Integer period;
+    private String monday;
+    private String tuesday ;
+    private String wednesday ;
+    private String thursday ;
+    private String friday;
+    private String saturday ;
 
 
-    public  LecturerTable(Day day, ArrayList<Schedule> schedule){
-        this.day = day.getName();
+    public  LecturerTable(Period period, ArrayList<Schedule> schedule){
+        this.period = period.getNumber();
         for (Schedule sced: schedule) {
-            int number = sced.getPeriod().getNumber();
+            int number = sced.getDay().getId();
             switch(number){
-                case 1: this.lesson1 = lessonToString(sced);break;
-                case 2: this.lesson2 = lessonToString(sced);break;
-                case 3: this.lesson3 = lessonToString(sced);break;
-                case 4: this.lesson4 = lessonToString(sced);break;
-                case 5: this.lesson5 = lessonToString(sced);break;
-                case 6: this.lesson6 = lessonToString(sced);break;
-                case 7: this.lesson7 = lessonToString(sced);break;
+                case 1: this.monday = lessonToString(sced);break;
+                case 2: this.tuesday = lessonToString(sced);break;
+                case 3: this.wednesday = lessonToString(sced);break;
+                case 4: this.thursday = lessonToString(sced);break;
+                case 5: this.friday = lessonToString(sced);break;
+                case 6: this.saturday = lessonToString(sced);break;
 
             }
 
@@ -49,43 +48,31 @@ public class LecturerTable {
         return res.toString();
     }
 
-    public String getDay() {
-        return day;
+    public Integer getPeriod() {
+        return period;
     }
 
-    public String getLesson1() {
-        return lesson1;
+    public String getMonday() {
+        return monday;
     }
 
-    public String getLesson2() {
-        return lesson2;
+    public String getTuesday() {
+        return tuesday;
     }
 
-    public String getLesson3() {
-        return lesson3;
+    public String getWednesday() {
+        return wednesday;
     }
 
-    public String getLesson4() {
-        return lesson4;
+    public String getThursday() {
+        return thursday;
     }
 
-    public String getLesson5() {
-        return lesson5;
+    public String getFriday() {
+        return friday;
     }
 
-    public String getLesson6() {
-        return lesson6;
+    public String getSaturday() {
+        return saturday;
     }
-
-    public String getLesson7() {
-        return lesson7;
-    }
-
-    @Override
-    public String toString() {
-        return "Lecturer [day=" + day + ", lesson1=" + lesson1 + ", lesson2=" + lesson2 +", lesson3=" + lesson3 +", lesson4=" + lesson4 +", lesson5=" + lesson5 +", lesson6=" + lesson6 + ", lesson7=" + lesson7 +"]";
-    }
-
-
-
 }

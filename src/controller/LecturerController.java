@@ -52,28 +52,27 @@ public class LecturerController {
     private TableView<LecturerTable> lecturerTable;
 
     @FXML
-    private TableColumn<LecturerTable, String> day;
+    private TableColumn<LecturerTable, Integer> period;
 
     @FXML
-    private TableColumn<LecturerTable, String> lesson1;
+    private TableColumn<LecturerTable, String> monday;
 
     @FXML
-    private TableColumn<LecturerTable, String> lesson2;
+    private TableColumn<LecturerTable, String> tuesday;
 
     @FXML
-    private TableColumn<LecturerTable, String> lesson3;
+    private TableColumn<LecturerTable, String> wednesday;
 
     @FXML
-    private TableColumn<LecturerTable, String> lesson4;
+    private TableColumn<LecturerTable, String> thursday;
 
     @FXML
-    private TableColumn<LecturerTable, String> lesson5;
+    private TableColumn<LecturerTable, String> friday;
 
     @FXML
-    private TableColumn<LecturerTable, String> lesson6;
+    private TableColumn<LecturerTable, String> saturday;
 
-    @FXML
-    private TableColumn<LecturerTable, String> lesson7;
+
 
 
 
@@ -133,15 +132,15 @@ public class LecturerController {
 
     @FXML
     public void showButtonCLicked(ActionEvent event){
-        ArrayList<Day> days = queries.getAllDays();
-        HashMap<Day,ArrayList<Schedule>> dayArrayListHashMap = initHashMap();
+        ArrayList<Period> periods = queries.getAllPeriods();
+        HashMap<Period,ArrayList<Schedule>> dayArrayListHashMap = initHashMap();
 
         lecturerTables.clear();
 
 
         lecturerTable.setItems(lecturerTables);
-        for (Day day: days) {
-            LecturerTable lectTable = new LecturerTable(day, dayArrayListHashMap.get(day));
+        for (Period period: periods) {
+            LecturerTable lectTable = new LecturerTable(period, dayArrayListHashMap.get(period));
             lecturerTables.add(lectTable);
         }
         System.out.println(lecturerTables);
@@ -150,10 +149,10 @@ public class LecturerController {
 
     }
 
-    private HashMap<Day,ArrayList<Schedule>> initHashMap(){
+
+    private HashMap<Period,ArrayList<Schedule>> initHashMap(){
 
         Lecturer lect = queries.getLecturerByName(lecturerNameChoice.getSelectionModel().getSelectedItem());
-        System.out.println(lect);
         Week wee = null;
         Specialization spec = null;
         Discipline disp = null;
@@ -184,14 +183,15 @@ public class LecturerController {
         }
 
         ArrayList<Schedule> scedule = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(lect,wee,spec,cours,disp);
-        ArrayList<Day> days = queries.getAllDays();
-        HashMap<Day,ArrayList<Schedule>> dayScheduleHashMap = new HashMap<>();
-        for (Day day : days) {
-            dayScheduleHashMap.put(day,new ArrayList<Schedule>());
+        ArrayList<Period> periods = queries.getAllPeriods();
+        HashMap<Period,ArrayList<Schedule>> dayScheduleHashMap = new HashMap<>();
+        for (Period period: periods) {
+            dayScheduleHashMap.put(period, new ArrayList<Schedule>());
         }
+
         for (Schedule schedule: scedule) {
-            Day day = schedule.getDay();
-            dayScheduleHashMap.get(day).add(schedule);
+            Period period = schedule.getPeriod();
+            dayScheduleHashMap.get(period).add(schedule);
         }
 
         return dayScheduleHashMap;
@@ -213,18 +213,13 @@ public class LecturerController {
 
         choiceBoxesFill();
 
-        day.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("day"));
-        lesson1.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson1"));
-
-
-
-        lesson2.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson2"));
-
-        lesson3.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson3"));
-        lesson4.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson4"));
-        lesson5.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson5"));
-        lesson6.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson6"));
-        lesson7.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson7"));
+        period.setCellValueFactory(new PropertyValueFactory<LecturerTable, Integer>("period"));
+        monday.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("monday"));
+        tuesday.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("tuesday"));
+        wednesday.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("wednesday"));
+        thursday.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("thursday"));
+        friday.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("friday"));
+        saturday.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("saturday"));
         lecturerTable.setId("table-row-cell");
         lecturerTable.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
         lecturerTable.setItems(lecturerTables);

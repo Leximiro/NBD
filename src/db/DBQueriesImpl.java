@@ -1027,6 +1027,29 @@ public class DBQueriesImpl {
 		return days;
 	}
 
+
+	public ArrayList<Period> getAllPeriods(){
+		ArrayList<Period> periods = new ArrayList<Period>();
+		ResultSet res = null;
+		try {
+			Connection conn = DBConnector.getConnection();
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM class_period ORDER BY id");
+			res = pst.executeQuery();
+			while (res.next()) {
+				Period period = new Period();
+				period.setId(res.getInt(1));
+				period.setNumber(res.getInt(2));
+				periods.add(period);
+			}
+			pst.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return periods;
+	}
+
+
+
 	public Period getPeriodByNumber(int number) {
 		Period period = new Period();
 		boolean exists = false;
