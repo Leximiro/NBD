@@ -24,6 +24,7 @@ public class LecturerController {
 
     private ObservableList<LecturerTable> lecturerTables = FXCollections.observableArrayList();
     private DBQueriesImpl queries ;
+    private Controller main;
 
 
 
@@ -73,27 +74,6 @@ public class LecturerController {
 
     @FXML
     private TableColumn<LecturerTable, String> lesson7;
-
-    @FXML
-    private void initialize() {
-        choiceBoxesFill();
-
-        day.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("day"));
-        lesson1.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson1"));
-
-
-
-        lesson2.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson2"));
-
-        lesson3.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson3"));
-        lesson4.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson4"));
-        lesson5.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson5"));
-        lesson6.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson6"));
-        lesson7.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson7"));
-        lecturerTable.setId("table-row-cell");
-        lecturerTable.setItems(lecturerTables);
-
-    }
 
 
 
@@ -155,9 +135,9 @@ public class LecturerController {
     public void showButtonCLicked(ActionEvent event){
         ArrayList<Day> days = queries.getAllDays();
         HashMap<Day,ArrayList<Schedule>> dayArrayListHashMap = initHashMap();
-        System.out.println(lecturerTables);
+
         lecturerTables.clear();
-        System.out.println(lecturerTables);
+
 
         lecturerTable.setItems(lecturerTables);
         for (Day day: days) {
@@ -225,6 +205,29 @@ public class LecturerController {
         File showDialog = chooser.showDialog(new Stage());
         String path = showDialog.getPath()+"/"+lect.getName()+".xlsx";
         LecturerExport.export(lect,wee,schedules,path);
+
+    }
+
+    public void init(Controller controller) {
+        main = controller;
+
+        choiceBoxesFill();
+
+        day.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("day"));
+        lesson1.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson1"));
+
+
+
+        lesson2.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson2"));
+
+        lesson3.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson3"));
+        lesson4.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson4"));
+        lesson5.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson5"));
+        lesson6.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson6"));
+        lesson7.setCellValueFactory(new PropertyValueFactory<LecturerTable, String>("lesson7"));
+        lecturerTable.setId("table-row-cell");
+        lecturerTable.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
+        lecturerTable.setItems(lecturerTables);
 
     }
 }

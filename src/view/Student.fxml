@@ -10,7 +10,7 @@
 <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="603.0" prefWidth="1133.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.StudentController">
   <children>
     <ChoiceBox id="spec" fx:id="specChoiceStudent" layoutX="14.0" layoutY="29.0" prefWidth="98.0" />
-    <TableView fx:id="studentTable" layoutX="14.0" layoutY="67.0" prefHeight="448.0" prefWidth="1096.0">
+    <TableView fx:id="studentTable" prefHeight="448.0" prefWidth="1096.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="67.0">
       <columns>
         <TableColumn prefWidth="75.0" text="Пара" fx:id="lessonStudent" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="141.0" text="1" fx:id="lesson1Student" />

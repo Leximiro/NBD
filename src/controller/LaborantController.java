@@ -22,16 +22,17 @@ import java.util.HashSet;
 public class LaborantController {
     private ObservableList<LaborantTable> laborantTables = FXCollections.observableArrayList();
     private DBQueriesImpl queries ;
+    private Controller main;
 
 
     @FXML
     ChoiceBox<Integer> buildingChoice;
     @FXML
-    CheckBox computers;
+    ChoiceBox<String> computers;
     @FXML
-    CheckBox projector;
+    ChoiceBox<String> projector;
     @FXML
-    CheckBox board;
+    ChoiceBox<String> board;
 
 
 
@@ -72,23 +73,6 @@ public class LaborantController {
 
 
 
-    @FXML
-    private void initialize() {
-        choiceBoxFill();
-        classroomLab.setCellValueFactory(new PropertyValueFactory<LaborantTable,String>("classroom"));
-        dayLab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("day"));
-        lesson1Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson1"));
-        lesson2Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson2"));
-        lesson3Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson3"));
-        lesson4Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson4"));
-        lesson5Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson5"));
-        lesson6Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson6"));
-        lesson7Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson7"));
-        laborantTable.setId("table-row-cell");
-        laborantTable.setItems(laborantTables);
-
-    }
-
     public void choiceBoxFill() {
         buildingChoice.getItems().clear();
 
@@ -100,6 +84,21 @@ public class LaborantController {
             buildingsFX.add(building);
         }
         buildingChoice.setItems(buildingsFX);
+        ObservableList<String> computer = FXCollections.observableArrayList();
+        computer.add("Будь-які");
+        computer.add("Є");
+        computer.add("Немає");
+        ObservableList<String> projectors = FXCollections.observableArrayList();
+        projectors.add("Будь-які");
+        projectors.add("Є");
+        projectors.add("Немає");
+        ObservableList<String> boards = FXCollections.observableArrayList();
+        boards.add("Будь-які");
+        boards.add("Є");
+        boards.add("Немає");
+        computers.setItems(computer);
+        board.setItems(boards);
+        projector.setItems(projectors);
 
 
     }
@@ -113,23 +112,14 @@ public class LaborantController {
         HashMap<Classroom,ArrayList<Schedule>> classroomArrayListHashMap = initHashMapArrayList();
         laborantTables.clear();
         laborantTable.setItems(laborantTables);
-        System.out.println(classroomArrayListHashMap);
-
         for (Classroom classroom: classrooms) {
             for (Day day:days) {
 
-
                 ArrayList<Schedule> schedules = sortByDay(day,classroomArrayListHashMap.get(classroom));
-                System.out.println("pair" + schedules);
-
-
-
-                LaborantTable studTable = new LaborantTable(classroom,day,schedules);
+          LaborantTable studTable = new LaborantTable(classroom,day,schedules);
                 laborantTables.add(studTable);
             }
         }
-        System.out.println(laborantTables);
-
         laborantTable.setItems(laborantTables);
     }
 
@@ -157,7 +147,7 @@ public class LaborantController {
                 res.add(schedule);
             }
         }
-        System.out.println(res);
+
 
         return res;
     }
@@ -165,12 +155,46 @@ public class LaborantController {
     private HashMap<Classroom,ArrayList<Schedule>> initHashMapArrayList() {
 
         HashMap<Classroom,ArrayList<Schedule>> dayScheduleHashMap = new HashMap<>();
-        boolean computer = computers.isSelected() ;
-        boolean projectors = projector.isSelected();
-        boolean boards = board.isSelected();
-        Integer buildings = buildingChoice.getSelectionModel().getSelectedItem();
-        System.out.println(""+computer+projectors+boards+buildings);
+        Boolean computer = null;
+        Boolean projectors = null;
+        Boolean boards = null ;
+        try {
+            if (computers.getSelectionModel().getSelectedItem().equals("Є")) {
+                computer = true;
 
+            }
+            if(computers.getSelectionModel().getSelectedItem().equals("Немає")){
+                computer = false;
+            }
+        }catch (NullPointerException e){
+
+        }
+        try {
+            if (projector.getSelectionModel().getSelectedItem().equals("Є")) {
+                projectors = true;
+
+            }
+            if (projector.getSelectionModel().getSelectedItem().equals("Немає")) {
+                projectors = false;
+            }
+        } catch (NullPointerException e){
+
+        }
+
+        try {
+            if (board.getSelectionModel().getSelectedItem().equals("Є")) {
+                boards = true;
+
+            }
+
+            if (board.getSelectionModel().getSelectedItem().equals("Немає")) {
+                boards = false;
+            }
+        } catch (NullPointerException e){
+
+        }
+
+        Integer buildings = buildingChoice.getSelectionModel().getSelectedItem();
 
         ArrayList<Schedule> scedule = queries.getScheduleByBuildingAndClassroomTypeAndClassroomNumber(buildings,boards,computer,projectors,null);
 
@@ -190,9 +214,30 @@ public class LaborantController {
 
     public void downloadLabBtn(ActionEvent actionEvent) {
 
-        boolean computer = computers.isSelected() ;
-        boolean projectors = projector.isSelected();
-        boolean boards = board.isSelected();
+        Boolean computer = null;
+        if(computers.getSelectionModel().getSelectedItem().equals("Є")){
+            computer = true;
+
+        }
+        if(computers.getSelectionModel().getSelectedItem().equals("Немає")){
+            computer = false;
+        }
+        Boolean projectors = null;
+        if(projector.getSelectionModel().getSelectedItem().equals("Є")){
+            projectors = true;
+
+        }
+        if(projector.getSelectionModel().getSelectedItem().equals("Немає")){
+            projectors = false;
+        }
+        Boolean boards = null ;
+        if(board.getSelectionModel().getSelectedItem().equals("Є")){
+            boards = true;
+
+        }
+        if(board.getSelectionModel().getSelectedItem().equals("Немає")){
+            boards = false;
+        }
         Integer buildings = buildingChoice.getSelectionModel().getSelectedItem();
         ArrayList<Schedule> schedules = queries.getScheduleByBuildingAndClassroomTypeAndClassroomNumber(buildings,boards,computer,projectors,null);
         DirectoryChooser chooser = new DirectoryChooser();
@@ -200,5 +245,24 @@ public class LaborantController {
         Week wee = queries.getWeekByNumber(1);
         String path = showDialog.getPath()+"/"+buildings+".xlsx";
         LabmanagerExport.export(wee,schedules,path);
+    }
+
+    public void init(Controller controller) {
+        main = controller;
+
+        choiceBoxFill();
+        classroomLab.setCellValueFactory(new PropertyValueFactory<LaborantTable,String>("classroom"));
+        dayLab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("day"));
+        lesson1Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson1"));
+        lesson2Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson2"));
+        lesson3Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson3"));
+        lesson4Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson4"));
+        lesson5Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson5"));
+        lesson6Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson6"));
+        lesson7Lab.setCellValueFactory(new PropertyValueFactory<LaborantTable, String>("lesson7"));
+        laborantTable.setId("table-row-cell");
+        laborantTable.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
+        laborantTable.setItems(laborantTables);
+
     }
 }

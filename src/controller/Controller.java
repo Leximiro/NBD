@@ -18,8 +18,22 @@ import java.util.ArrayList;
 
 
 public class Controller {
+    @FXML
+    LaborantController laborantController;
+    @FXML
+    StudentController studentController;
+    @FXML
+    LecturerController lecturerController;
+    @FXML
+    UploadController uploadController;
 
 
-
+    @FXML
+    private void initialize(){
+        laborantController.init(this);
+        studentController.init(this);
+        lecturerController.init(this);
+        uploadController.init(this);
+    }
 
 }

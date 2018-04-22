@@ -25,6 +25,7 @@ public class StudentController {
 
     private ObservableList<StudentTable> studentTables = FXCollections.observableArrayList();
     private DBQueriesImpl queries ;
+    private Controller main;
 
 
 
@@ -70,21 +71,7 @@ public class StudentController {
     @FXML
     private TableColumn<StudentTable, String> lesson7Student;
 
-    @FXML
-    private void initialize() {
-        choiceBoxesFill();
-        lessonStudent.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson"));
-        lesson1Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson1"));
-        lesson2Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson2"));
-        lesson3Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson3"));
-        lesson4Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson4"));
-        lesson5Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson5"));
-        lesson6Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson6"));
-        lesson7Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson7"));
-        studentTable.setId("table-row-cell");
-        studentTable.setItems(studentTables);
 
-    }
 
     public void choiceBoxesFill() {
         specChoiceStudent.getItems().clear();
@@ -216,5 +203,22 @@ public class StudentController {
             StudentExport.export(spec,cours,queries.getWeekByNumber(scedule.get(1).getWeekNumber()),scedule,path);
 
 
+    }
+
+    public void init(Controller controller) {
+
+
+        choiceBoxesFill();
+        lessonStudent.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson"));
+        lesson1Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson1"));
+        lesson2Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson2"));
+        lesson3Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson3"));
+        lesson4Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson4"));
+        lesson5Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson5"));
+        lesson6Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson6"));
+        lesson7Student.setCellValueFactory(new PropertyValueFactory<StudentTable, String>("lesson7"));
+        studentTable.setId("table-row-cell");
+        studentTable.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
+        studentTable.setItems(studentTables);
     }
 }

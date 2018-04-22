@@ -9,7 +9,7 @@
 
 <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="603.0" prefWidth="1133.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.LaborantController">
   <children>
-    <TableView fx:id="laborantTable" layoutX="14.0" layoutY="67.0" prefHeight="448.0" prefWidth="1096.0">
+    <TableView fx:id="laborantTable" prefHeight="448.0" prefWidth="1096.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="75.0">
       <columns>
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="75.0" text="Аудиторія" fx:id="classroomLab" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="75.0" text="Пара" fx:id="dayLab" />
@@ -22,13 +22,16 @@
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="133.0" text="7 " fx:id="lesson7Lab" />
       </columns>
     </TableView>
-    <ToolBar layoutX="0.0" layoutY="0.0" prefWidth="1133.0">
+    <ToolBar prefWidth="1133.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <items>
         <ChoiceBox fx:id="buildingChoice" prefWidth="98.0" />
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Корпус" />
-        <CheckBox fx:id="computers" mnemonicParsing="false" text="Комп'ютери" />
-        <CheckBox fx:id="projector" mnemonicParsing="false" text="Проектор" />
-        <CheckBox fx:id="board" mnemonicParsing="false" text="Дошка" />
+        <ChoiceBox id="buildingChoice" fx:id="computers" prefWidth="98.0" />
+        <Text id="Компьютери" scaleX="1.0" scaleY="0.9999937347040251" strokeType="OUTSIDE" strokeWidth="0.0" text="Компьютери" />
+        <ChoiceBox id="buildingChoice" fx:id="projector" prefWidth="98.0" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Проектор" />
+        <ChoiceBox id="buildingChoice" fx:id="board" prefWidth="98.0" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Дошка" />
         <Button id="showClassroom" fx:id="classroomShowBtn" mnemonicParsing="false" onAction="#showTableLaborant" text="Показати" />
         <Button fx:id="downloadLab" mnemonicParsing="false" onAction="#downloadLabBtn" text="Завантажити" />
       </items>

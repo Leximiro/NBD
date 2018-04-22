@@ -9,17 +9,25 @@
 
 <TabPane prefHeight="634.0" prefWidth="1133.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.Controller">
   <tabs>
-    <Tab fx:id="uploadTab"  text="Завантаження" >
-      <fx:include source="Upload.fxml"/>
+    <Tab   text="Завантаження" >
+        <content>
+            <fx:include fx:id="upload" source="Upload.fxml"/>
+        </content>
     </Tab>
     <Tab fx:id="lecturerTab" text="Викладач" >
-      <fx:include source="Lecturer.fxml"/>
+        <content>
+            <fx:include fx:id="lecturer" source="Lecturer.fxml"/>
+        </content>
     </Tab>
     <Tab fx:id="studentTab"  text="Студент" >
-      <fx:include source="Student.fxml"/>
+        <content>
+            <fx:include fx:id="student" source="Student.fxml"/>
+        </content>
     </Tab>
     <Tab fx:id="laborantTab"  text="Методист/Лаборант" >
-      <fx:include source="Laborant.fxml"/>
+        <content>
+            <fx:include fx:id="laborant" source="Laborant.fxml"/>
+        </content>
     </Tab>
   </tabs>
 </TabPane>
