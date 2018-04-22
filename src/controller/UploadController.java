@@ -8,10 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
@@ -141,6 +138,10 @@ public class UploadController {
             try{
                 ExcelParser.parse(curFilePath, queries);
             }catch (InvalidInputFileException e){
+                String message = "У файлі "+fileName+" ";
+                Alert alert = new Alert(Alert.AlertType.NONE,message+ e.getMessage(), ButtonType.OK);
+                alert.setTitle("Помилки при завантаженні");
+                alert.showAndWait();
                 e.getMessage();
             }
 
