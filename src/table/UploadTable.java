@@ -17,7 +17,7 @@ public class UploadTable {
     private int period;
     private String classroom;
     private String classType;
-    private ArrayList<Week> weeks;
+    private String weeks;
 
 
     public int getId() {
@@ -60,7 +60,7 @@ public class UploadTable {
         return classType;
     }
 
-    public ArrayList<Week> getWeeks() {
+    public String getWeeks() {
         return weeks;
     }
 
@@ -73,13 +73,18 @@ public class UploadTable {
         this.lecturer = schedule.getLecturer().getName();
         this.day = schedule.getDay().getName();
         this.period = schedule.getPeriod().getNumber();
-        this.classroom = schedule.getClassroom().getNumber();
+        this.classroom = schedule.getClassroom().getBuilding()+"-"+schedule.getClassroom().getNumber();
         this.classType = schedule.getClassType().getName();
-        this.weeks = schedule.getWeeks();
+        this.weeks = extractWeeks(schedule.getWeeks());
 
     }
 
-
+    private String extractWeeks(ArrayList<Week> weeks) {
+        StringBuilder res = new StringBuilder("");
+        for(Week w : weeks)
+            res.append(w.getNumber()+" ");
+        return res.toString();
+    }
 
 
 

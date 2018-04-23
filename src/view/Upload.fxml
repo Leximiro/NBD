@@ -9,19 +9,19 @@
 
 <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="603.0" prefWidth="1133.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.UploadController">
   <children>
-    <TableView fx:id="tableErrors" prefHeight="389.0" prefWidth="1096.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="150.0">
+    <TableView fx:id="tableErrors" prefHeight="494.0" prefWidth="1112.9999000000025" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="99.0">
       <columns>
-        <TableColumn prefWidth="75.0" text="Id" fx:id="idError" />
-        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="92.0" text="Рік" fx:id="yearError" />
-        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="85.0" text="Група" fx:id="groupError" />
+        <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Id" fx:id="idError" />
+        <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Рік" fx:id="yearError" />
+        <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Група" fx:id="groupError" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="137.0" text="Спеціалізація" fx:id="specError" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="126.0" text="Дисципліна" fx:id="disciplineError" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="121.0" text="Викладач" fx:id="lecturerError" />
-        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="87.0" text="День" fx:id="dayError" />
-        <TableColumn prefWidth="75.0" text="Період" fx:id="periodError" />
-        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="74.0" text="Аудиторія" fx:id="classroomError" />
+        <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="День" fx:id="dayError" />
+        <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Період" fx:id="periodError" />
+        <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Аудиторія" fx:id="classroomError" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="119.0" text="Тип аудиторії" fx:id="classTypeError" />
-        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="106.0" text="Тижні" fx:id="weekNumberErrors" />
+        <TableColumn prefWidth="120.0" text="Тижні" fx:id="weekNumberErrors" />
       </columns>
     </TableView>
     <ToolBar prefWidth="1133.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

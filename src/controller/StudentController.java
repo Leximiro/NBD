@@ -36,6 +36,8 @@ public class StudentController {
     ChoiceBox<Integer> courseChoiceStudent;
     @FXML
     ChoiceBox<String> lessonChoiceStudent;
+    @FXML
+    ChoiceBox<Integer> weeksStudent;
 
 
     @FXML
@@ -98,6 +100,13 @@ public class StudentController {
             disciplinesFX.add(discipline.getName());
         }
         lessonChoiceStudent.setItems(disciplinesFX);
+        ArrayList<Week> weeks = queries.getAllWeeks();
+        ObservableList<Integer> weeksFX = FXCollections.observableArrayList();
+        weeksFX.add(null);
+        for (Week week : weeks) {
+            weeksFX.add(week.getNumber());
+        }
+        weeksStudent.setItems(weeksFX);
 
 
 
@@ -130,6 +139,14 @@ public class StudentController {
         Specialization spec = null;
         Discipline disp = null;
         Integer cours = null;
+        Week wee = null;
+
+        try{
+            wee = queries.getWeekByNumber(weeksStudent.getSelectionModel().getSelectedItem());
+        }
+        catch (NullPointerException e) {
+
+        }
 
         try{
             spec = queries.getSpecializationByName(specChoiceStudent.getSelectionModel().getSelectedItem());
@@ -149,7 +166,7 @@ public class StudentController {
             ;
         }
 
-        ArrayList<Schedule> scedule = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(null,null,spec,cours,disp);
+        ArrayList<Schedule> scedule = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(null,wee,spec,cours,disp);
         System.out.println(scedule);
         ArrayList<Period> periods = queries.getAllPeriods();
         for (Period period : periods) {

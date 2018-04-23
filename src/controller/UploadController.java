@@ -81,7 +81,7 @@ public class UploadController {
     private TableColumn<Schedule, String> classTypeError;
 
     @FXML
-    private TableColumn<Schedule, Integer> weekNumberErrors;
+    private TableColumn<Schedule, String> weekNumberErrors;
 
 
 
@@ -197,7 +197,7 @@ public class UploadController {
         periodError.setCellValueFactory(new PropertyValueFactory<Schedule, Integer>("period"));
         classroomError.setCellValueFactory(new PropertyValueFactory<Schedule, String>("classroom"));
         classTypeError.setCellValueFactory(new PropertyValueFactory<Schedule, String>("classType"));
-        weekNumberErrors.setCellValueFactory(new PropertyValueFactory<Schedule, Integer>("weekNumber"));
+        weekNumberErrors.setCellValueFactory(new PropertyValueFactory<Schedule, String>("weeks"));
         tableErrors.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
 
         tableErrors.setItems(scheduleErrors);

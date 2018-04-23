@@ -38,7 +38,7 @@ public class StudentTable {
     }
 
     private String lessonToString(Schedule schedule){
-        String lesson = "\u0422\u0438\u0436\u043d\u0456: "+extractWeeks(schedule.getWeeks())+"\n\u0414\u0438\u0441\u0446\u0438\u043f\u043b\u0456\u043d\u0430: "+schedule.getDiscipline().getName()+"\n\u0413\u0440\u0443\u043f\u0430: "+schedule.getGroup()+"\n\u0410\u0443\u0434\u0438\u0442\u043e\u0440\u0456\u044f: "+schedule.getClassroom().getNumber()+"\n\u0412\u0438\u043a\u043b\u0430\u0434\u0430\u0447:\n"+schedule.getLecturer().getName();
+        String lesson = "\u0422\u0438\u0436\u043d\u0456: "+extractWeeks(schedule.getWeeks())+"\n\u0414\u0438\u0441\u0446\u0438\u043f\u043b\u0456\u043d\u0430: "+schedule.getDiscipline().getName()+"\n\u0413\u0440\u0443\u043f\u0430: "+schedule.getGroup()+"\n\u0410\u0443\u0434\u0438\u0442\u043e\u0440\u0456\u044f: "+schedule.getClassroom().getBuilding()+"-"+schedule.getClassroom().getNumber()+"\n\u0412\u0438\u043a\u043b\u0430\u0434\u0430\u0447:\n"+schedule.getLecturer().getName();
         return lesson;
     }
 
