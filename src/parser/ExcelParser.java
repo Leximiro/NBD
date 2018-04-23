@@ -88,7 +88,7 @@ public class ExcelParser {
 
                 String groupCell = getStringCellValue(sheet, i, j  + 4);
 
-                classType = db.getClassTypeByName(groupCell.equalsIgnoreCase("лекція") ? "лекція" : "практика");
+                classType = db.getClassTypeByName(groupCell.equalsIgnoreCase("\u043b\u0435\u043a\u0446\u0456\u044f") ? "\u043b\u0435\u043a\u0446\u0456\u044f" : "\u043f\u0440\u0430\u043a\u0442\u0438\u043a\u0430");
 
                 String weekCell = getStringCellValue(sheet, i, j  + 5);
                 ArrayList<Integer> weeksNumbers = getWeeksNumbers(weekCell);
@@ -109,7 +109,7 @@ public class ExcelParser {
                     }
                 }
 
-                Schedule schedule = new Schedule(year, classType.getName().equalsIgnoreCase("лекція") ? null : groupCell,
+                Schedule schedule = new Schedule(year, classType.getName().equalsIgnoreCase("\u043b\u0435\u043a\u0446\u0456\u044f") ? null : groupCell,
                         specialization, discipline, lecturer, day, period, classroom, classType, weeks);
 
                 db.addSchedule(schedule);
@@ -139,10 +139,10 @@ public class ExcelParser {
 
     private static String getSpecialization(String str) throws InvalidInputFileException {
         if (str.indexOf("\"") == -1 || (str.lastIndexOf("\"") - str.indexOf("\"")) == 0) {
-            throw new InvalidInputFileException("Має бути спеціальність в лапках", SPECIALIZATION_AND_COURSE_ROW);
+            throw new InvalidInputFileException("\u041c\u0430\u0454 \u0431\u0443\u0442\u0438 \u0441\u043f\u0435\u0446\u0456\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c \u0432 \u043b\u0430\u043f\u043a\u0430\u0445", SPECIALIZATION_AND_COURSE_ROW);
         }
-        return str.contains("МП") ? "МП " + str.substring(str.indexOf("\"") + 1, str.lastIndexOf("\"")) :
-                "БП " + str.substring(str.indexOf("\"") + 1, str.lastIndexOf("\""));
+        return str.contains("\u041c\u041f") ? "\u041c\u041f " + str.substring(str.indexOf("\"") + 1, str.lastIndexOf("\"")) :
+                "\u0411\u041f " + str.substring(str.indexOf("\"") + 1, str.lastIndexOf("\""));
     }
 
     private static int getYear(String str) throws InvalidInputFileException {
@@ -151,13 +151,13 @@ public class ExcelParser {
                 return Character.getNumericValue(str.charAt(i));
             }
         }
-        throw new InvalidInputFileException("Має бути рік навчання", SPECIALIZATION_AND_COURSE_ROW);
+        throw new InvalidInputFileException("\u041c\u0430\u0454 \u0431\u0443\u0442\u0438 \u0440\u0456\u043a \u043d\u0430\u0432\u0447\u0430\u043d\u043d\u044f", SPECIALIZATION_AND_COURSE_ROW);
     }
 
     private static String getLecturerName(String str) {
         int i = 0;
-        while (str.charAt(i) != 'Ю' && str.charAt(i) != 'Я' && str.charAt(i) != 'Є' && str.charAt(i) != 'Ї' &&
-                str.charAt(i) != 'І' && (str.charAt(i) < 'А' || str.charAt(i) > 'Щ')){
+        while (str.charAt(i) != '\u042e' && str.charAt(i) != '\u042f' && str.charAt(i) != '\u0404' && str.charAt(i) != '\u0407' &&
+                str.charAt(i) != '\u0406' && (str.charAt(i) < '\u0410' || str.charAt(i) > '\u0429')){
             i++;
             if (i == str.length()){
                 i = 0;
@@ -173,8 +173,8 @@ public class ExcelParser {
 
     private static String getLecturerDegree(String str) {
         int i = 0;
-        while (str.charAt(i) != 'Ю' && str.charAt(i) != 'Я' && str.charAt(i) != 'Є' && str.charAt(i) != 'Ї' &&
-                str.charAt(i) != 'І' && (str.charAt(i) < 'А' || str.charAt(i) > 'Щ')){
+        while (str.charAt(i) != '\u042e' && str.charAt(i) != '\u042f' && str.charAt(i) != '\u0404' && str.charAt(i) != '\u0407' &&
+                str.charAt(i) != '\u0406' && (str.charAt(i) < '\u0410' || str.charAt(i) > '\u0429')){
             i++;
         }
         return i == 0 ? "" : str.substring(0, i).trim();

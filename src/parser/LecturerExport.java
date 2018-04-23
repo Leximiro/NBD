@@ -68,7 +68,7 @@ public class LecturerExport {
                         output.append(schedule.getClassroom().getBuilding() + "-" + schedule.getClassroom().getNumber() + "\n");
                         output.append(schedule.getDiscipline().getName() + "\n");
                         output.append(schedule.getClassType().getName().equalsIgnoreCase
-                                ("лекція") ?  schedule.getClassType().getName() + "\n" : "Група " + schedule.getGroup() + "\n");
+                                ("\u043b\u0435\u043a\u0446\u0456\u044f") ?  schedule.getClassType().getName() + "\n" : "\u0413\u0440\u0443\u043f\u0430 " + schedule.getGroup() + "\n");
                         output.append(schedule.getSpecialization().getName() + "-" + schedule.getYear() + "\n\n");
                     }
                 }

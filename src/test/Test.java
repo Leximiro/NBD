@@ -29,3 +29,16 @@ public class Test {
         //System.out.println(db.getLecturerByName("В.А. Руссєв"));
     }
 }
+
+class Encoding {
+    public static void encode() {
+        String s = "";
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c > 31 && c < 127)
+                System.out.print(String.valueOf(c));
+            else
+                System.out.print(String.format("\\u%04x", (int)c));
+        }
+    }
+}

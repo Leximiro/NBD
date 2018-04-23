@@ -101,7 +101,7 @@ public class UploadController {
         {
             System.out.print("NullPointerException caught");
         }
-        bdcounter.setText("Кількість записів: "+queries.getNumberOfClasses());
+        bdcounter.setText("\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c \u0437\u0430\u043f\u0438\u0441\u0456\u0432: "+queries.getNumberOfClasses());
     }
 
 
@@ -138,9 +138,9 @@ public class UploadController {
             try{
                 ExcelParser.parse(curFilePath, queries);
             }catch (InvalidInputFileException e){
-                String message = "У файлі "+fileName+" ";
+                String message = "\u0423 \u0444\u0430\u0439\u043b\u0456 "+fileName+" ";
                 Alert alert = new Alert(Alert.AlertType.NONE,message+ e.getMessage(), ButtonType.OK);
-                alert.setTitle("Помилки при завантаженні");
+                alert.setTitle("\u041f\u043e\u043c\u0438\u043b\u043a\u0438 \u043f\u0440\u0438 \u0437\u0430\u0432\u0430\u043d\u0442\u0430\u0436\u0435\u043d\u043d\u0456");
                 alert.showAndWait();
                 e.getMessage();
             }
@@ -153,7 +153,7 @@ public class UploadController {
         tableErrors.setItems(scheduleErrors);
         initData();
         tableErrors.setItems(scheduleErrors);
-        bdcounter.setText("Кількість записів: "+queries.getNumberOfClasses());
+        bdcounter.setText("\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c \u0437\u0430\u043f\u0438\u0441\u0456\u0432: "+queries.getNumberOfClasses());
         main.refreshCheckBoxes();
         wait.setVisible(false);
 
@@ -166,7 +166,7 @@ public class UploadController {
         tableErrors.setItems(scheduleErrors);
         initData();
         tableErrors.setItems(scheduleErrors);
-        bdcounter.setText("Кількість записів: "+queries.getNumberOfClasses());
+        bdcounter.setText("\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c \u0437\u0430\u043f\u0438\u0441\u0456\u0432: "+queries.getNumberOfClasses());
         main.refreshCheckBoxes();
     }
 

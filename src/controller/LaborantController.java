@@ -83,17 +83,17 @@ public class LaborantController {
         }
         buildingChoice.setItems(buildingsFX);
         ObservableList<String> computer = FXCollections.observableArrayList();
-        computer.add("Будь-які");
-        computer.add("Є");
-        computer.add("Немає");
+        computer.add("\u0411\u0443\u0434\u044c-\u044f\u043a\u0456");
+        computer.add("\u0404");
+        computer.add("\u041d\u0435\u043c\u0430\u0454");
         ObservableList<String> projectors = FXCollections.observableArrayList();
-        projectors.add("Будь-які");
-        projectors.add("Є");
-        projectors.add("Немає");
+        projectors.add("\u0411\u0443\u0434\u044c-\u044f\u043a\u0456");
+        projectors.add("\u0404");
+        projectors.add("\u041d\u0435\u043c\u0430\u0454");
         ObservableList<String> boards = FXCollections.observableArrayList();
-        boards.add("Будь-які");
-        boards.add("Є");
-        boards.add("Немає");
+        boards.add("\u0411\u0443\u0434\u044c-\u044f\u043a\u0456");
+        boards.add("\u0404");
+        boards.add("\u041d\u0435\u043c\u0430\u0454");
         computers.setItems(computer);
         board.setItems(boards);
         projector.setItems(projectors);
@@ -157,22 +157,22 @@ public class LaborantController {
         Boolean projectors = null;
         Boolean boards = null ;
         try {
-            if (computers.getSelectionModel().getSelectedItem().equals("Є")) {
+            if (computers.getSelectionModel().getSelectedItem().equals("\u0404")) {
                 computer = true;
 
             }
-            if(computers.getSelectionModel().getSelectedItem().equals("Немає")){
+            if(computers.getSelectionModel().getSelectedItem().equals("\u041d\u0435\u043c\u0430\u0454")){
                 computer = false;
             }
         }catch (NullPointerException e){
 
         }
         try {
-            if (projector.getSelectionModel().getSelectedItem().equals("Є")) {
+            if (projector.getSelectionModel().getSelectedItem().equals("\u0404")) {
                 projectors = true;
 
             }
-            if (projector.getSelectionModel().getSelectedItem().equals("Немає")) {
+            if (projector.getSelectionModel().getSelectedItem().equals("\u041d\u0435\u043c\u0430\u0454")) {
                 projectors = false;
             }
         } catch (NullPointerException e){
@@ -180,12 +180,12 @@ public class LaborantController {
         }
 
         try {
-            if (board.getSelectionModel().getSelectedItem().equals("Є")) {
+            if (board.getSelectionModel().getSelectedItem().equals("\u0404")) {
                 boards = true;
 
             }
 
-            if (board.getSelectionModel().getSelectedItem().equals("Немає")) {
+            if (board.getSelectionModel().getSelectedItem().equals("\u041d\u0435\u043c\u0430\u0454")) {
                 boards = false;
             }
         } catch (NullPointerException e){
@@ -216,22 +216,22 @@ public class LaborantController {
         Boolean projectors = null;
         Boolean boards = null ;
         try {
-            if (computers.getSelectionModel().getSelectedItem().equals("Є")) {
+            if (computers.getSelectionModel().getSelectedItem().equals("\u0404")) {
                 computer = true;
 
             }
-            if(computers.getSelectionModel().getSelectedItem().equals("Немає")){
+            if(computers.getSelectionModel().getSelectedItem().equals("\u041d\u0435\u043c\u0430\u0454")){
                 computer = false;
             }
         }catch (NullPointerException e){
 
         }
         try {
-            if (projector.getSelectionModel().getSelectedItem().equals("Є")) {
+            if (projector.getSelectionModel().getSelectedItem().equals("\u0404")) {
                 projectors = true;
 
             }
-            if (projector.getSelectionModel().getSelectedItem().equals("Немає")) {
+            if (projector.getSelectionModel().getSelectedItem().equals("\u041d\u0435\u043c\u0430\u0454")) {
                 projectors = false;
             }
         } catch (NullPointerException e){
@@ -239,12 +239,12 @@ public class LaborantController {
         }
 
         try {
-            if (board.getSelectionModel().getSelectedItem().equals("Є")) {
+            if (board.getSelectionModel().getSelectedItem().equals("\u0404")) {
                 boards = true;
 
             }
 
-            if (board.getSelectionModel().getSelectedItem().equals("Немає")) {
+            if (board.getSelectionModel().getSelectedItem().equals("\u041d\u0435\u043c\u0430\u0454")) {
                 boards = false;
             }
         } catch (NullPointerException e){

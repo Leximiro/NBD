@@ -69,7 +69,7 @@ public class StudentExport {
                         output.append(schedule.getLecturer().getDegree() + " " + schedule.getLecturer().getName() + "\n");
                         output.append(schedule.getDiscipline().getName() + "\n");
                         output.append(schedule.getClassType().getName().equalsIgnoreCase
-                                ("лекція") ?  schedule.getClassType().getName() + "\n" : "Група " + schedule.getGroup() + "\n\n");
+                                ("\u043b\u0435\u043a\u0446\u0456\u044f") ?  schedule.getClassType().getName() + "\n" : "\u0413\u0440\u0443\u043f\u0430 " + schedule.getGroup() + "\n\n");
                     }
                 }
                 row.createCell(j + 1).setCellValue(output.toString());
