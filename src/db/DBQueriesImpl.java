@@ -797,7 +797,7 @@ public class DBQueriesImpl {
 			Lecturer lecturer, Week week, Specialization specialization, Integer course, Discipline discipline){
 		
 		StringBuilder query = new StringBuilder(""
-        		+ "SELECT schedule.id, course, specialty_id, day_name_id, class_period_id, classroom_id, discipline_id, class_type_id, teacher_id, group_number, weeks.id "
+        		+ "SELECT schedule.id, course, specialty_id, day_name_id, class_period_id, classroom_id, discipline_id, class_type_id, teacher_id, group_number "
         		+ "FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id "
         					  + "INNER JOIN weeks ON schedule_week.weeks_id = weeks.id "
         	    + "WHERE ");
@@ -833,11 +833,12 @@ public class DBQueriesImpl {
 					Lecturer lectur = getLecturerById(res.getInt(9));
 				schedule.setLecturer(lectur);
 				schedule.setGroup(res.getString(10));
-				ArrayList<Week> weeks = new ArrayList<Week>();
-				weeks.add(getWeekById(res.getInt(11)));
-            	schedule.setWeeks(weeks);
             	schedules.add(schedule);
             }
+            for (Schedule schedule : schedules){
+				ArrayList<Week> weeks = getWeeksByScheduleId(schedule.getId());
+				schedule.setWeeks(weeks);
+			}
             pst.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -884,10 +885,11 @@ public class DBQueriesImpl {
 					Lecturer lectur = getLecturerById(res.getInt(9));
 				schedule.setLecturer(lectur);
 				schedule.setGroup(res.getString(10));
+            }
+			for (Schedule schedule : schedules){
 				ArrayList<Week> weeks = getWeeksByScheduleId(schedule.getId());
 				schedule.setWeeks(weeks);
-            	schedules.add(schedule);
-            }
+			}
             pst.close();
         } catch (SQLException e) {
             e.printStackTrace();
