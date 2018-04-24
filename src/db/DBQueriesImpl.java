@@ -807,8 +807,8 @@ public class DBQueriesImpl {
 		query.append((specialization==null) ? 	"specialty_id = specialty_id AND " 	: 		"specialty_id = " 	+ specialization.getId() + " AND ");
 		query.append((course==null) 		? 	"course = course AND " 				: 		"course = " 		+ course + " AND ");
 		query.append((discipline==null) 	? 	"discipline_id = discipline_id" 	: 		"discipline_id = " 	+ discipline.getId() );
-		
-		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+
+		HashSet<Schedule> schedules = new HashSet<Schedule>();
 		ResultSet res = null;
         try {
         	Connection conn = DBConnector.getConnection();
@@ -843,7 +843,7 @@ public class DBQueriesImpl {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return schedules;
+        return new ArrayList<Schedule>(schedules);
 	}
 
 	public ArrayList<Schedule> getScheduleByBuildingAndClassroomTypeAndClassroomNumber(
@@ -860,7 +860,7 @@ public class DBQueriesImpl {
 		query.append((projector==null) 		? 	"projector = projector AND " 				: 		"projector = " 			+ (projector ? 1 : 0) + " AND ");
 		query.append((number==null) 		? 	"classroom._number = classroom._number" 	: 		"classroom._number = " 	+ number );
 				
-		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+		HashSet<Schedule> schedules = new HashSet<Schedule>();
 		ResultSet res = null;
         try {
         	Connection conn = DBConnector.getConnection();
@@ -894,7 +894,7 @@ public class DBQueriesImpl {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return schedules;
+        return new ArrayList<Schedule>(schedules);
 	}
 
 	public ArrayList<Integer> getAllBuildings(){
