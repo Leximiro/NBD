@@ -54,7 +54,7 @@ public class LecturerExport {
         int rowNum = 0;
         Row row = sheet.createRow(rowNum);
         row.setRowStyle(style);
-        row.createCell(0).setCellValue(lecturer.getName());
+        row.createCell(0).setCellValue(lecturer == null ? "" : lecturer.getName());
         row.getCell(0).setCellStyle(style);
         row.createCell(1).setCellValue(week == null ? "" : "Week " + week.getNumber());
         row.getCell(1).setCellStyle(style);

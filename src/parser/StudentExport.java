@@ -55,6 +55,7 @@ public class StudentExport {
         int rowNum = 0;
         Row row = sheet.createRow(rowNum);
         row.setRowStyle(style);
+        String str = (specialization == null ? "" : specialization.getName() + " ") + (year == 0 ? "" : "year");
         row.createCell(0).setCellValue(specialization.getName() + "-" + year);
         row.getCell(0).setCellStyle(style);
         row.createCell(1).setCellValue(week == null ? "" : "Week " + week.getNumber());

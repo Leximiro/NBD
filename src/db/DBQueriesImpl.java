@@ -328,51 +328,52 @@ public class DBQueriesImpl {
 	public void addSchedule(Schedule schedule) {
 		try {
 			Connection conn = DBConnector.getConnection();
-
 			HashSet<Integer> schedulesIdsWithErrors = new HashSet<Integer>();
-			boolean isError = false;
+			if(!(schedule.getDiscipline().getName().toLowerCase().contains("англ")) && !(schedule.getDiscipline().getName().toLowerCase().contains("фізич"))){
+				boolean isError = false;
 
-			StringBuilder inPart = new StringBuilder("");
-			for(Week w : schedule.getWeeks()){
-				inPart.append(String.valueOf(w.getId())+",");
-			}
-			if(inPart.length() > 1)
-				inPart.setLength(inPart.length() - 1);
+				StringBuilder inPart = new StringBuilder("");
+				for (Week w : schedule.getWeeks()) {
+					inPart.append(String.valueOf(w.getId()) + ",");
+				}
+				if (inPart.length() > 1)
+					inPart.setLength(inPart.length() - 1);
 
-			PreparedStatement pstCheck1 = conn.prepareStatement("" +
-					"SELECT schedule_id " +
-					"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
-								"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
-					"WHERE day_name_id = ? " +
-					  "AND class_period_id = ? " +
-					  "AND teacher_id = ? " +
-					  "AND weeks_id IN ("+inPart.toString()+")");
-			pstCheck1.setInt(1, schedule.getDay().getId());
-			pstCheck1.setInt(2, schedule.getPeriod().getId());
-			pstCheck1.setInt(3, schedule.getLecturer().getId());
-			ResultSet res1 = pstCheck1.executeQuery();
-			while (res1.next()) {
-				schedulesIdsWithErrors.add(res1.getInt(1));
-			}
-			PreparedStatement pstCheck2 = conn.prepareStatement("" +
-					"SELECT schedule_id " +
-					"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
-					"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
-					"WHERE day_name_id = ? " +
-					"AND class_period_id = ? " +
-					"AND classroom_id = ? " +
-					"AND classroom_id IS NOT NULL " +
-					"AND weeks_id IN ("+inPart.toString()+")");
-			pstCheck2.setInt(1, schedule.getDay().getId());
-			pstCheck2.setInt(2, schedule.getPeriod().getId());
-			if(schedule.getClassroom() == null) {
-				pstCheck2.setString(3, null);
-			} else {
-				pstCheck2.setInt(3, schedule.getClassroom().getId());
-			}
-			ResultSet res2 = pstCheck1.executeQuery();
-			while (res2.next()) {
-				schedulesIdsWithErrors.add(res2.getInt(1));
+				PreparedStatement pstCheck1 = conn.prepareStatement("" +
+						"SELECT schedule_id " +
+						"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
+						"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
+						"WHERE day_name_id = ? " +
+						"AND class_period_id = ? " +
+						"AND teacher_id = ? " +
+						"AND weeks_id IN (" + inPart.toString() + ")");
+				pstCheck1.setInt(1, schedule.getDay().getId());
+				pstCheck1.setInt(2, schedule.getPeriod().getId());
+				pstCheck1.setInt(3, schedule.getLecturer().getId());
+				ResultSet res1 = pstCheck1.executeQuery();
+				while (res1.next()) {
+					schedulesIdsWithErrors.add(res1.getInt(1));
+				}
+				PreparedStatement pstCheck2 = conn.prepareStatement("" +
+						"SELECT schedule_id " +
+						"FROM schedule INNER JOIN schedule_week ON schedule.id = schedule_week.schedule_id " +
+						"INNER JOIN weeks ON schedule_week.weeks_id = weeks.id " +
+						"WHERE day_name_id = ? " +
+						"AND class_period_id = ? " +
+						"AND classroom_id = ? " +
+						"AND classroom_id IS NOT NULL " +
+						"AND weeks_id IN (" + inPart.toString() + ")");
+				pstCheck2.setInt(1, schedule.getDay().getId());
+				pstCheck2.setInt(2, schedule.getPeriod().getId());
+				if (schedule.getClassroom() == null) {
+					pstCheck2.setString(3, null);
+				} else {
+					pstCheck2.setInt(3, schedule.getClassroom().getId());
+				}
+				ResultSet res2 = pstCheck1.executeQuery();
+				while (res2.next()) {
+					schedulesIdsWithErrors.add(res2.getInt(1));
+				}
 			}
 
 			PreparedStatement pst = conn.prepareStatement("INSERT INTO "
@@ -409,14 +410,14 @@ public class DBQueriesImpl {
 
 	private void addErrors(ArrayList<Integer> schedulesIdsWithErrors) {
 		Connection conn = DBConnector.getConnection();
-		try{
-			for (Integer i : schedulesIdsWithErrors){
+		for (Integer i : schedulesIdsWithErrors){
+			try{
 				PreparedStatement pst = conn.prepareStatement("INSERT INTO errors(schedule_id) VALUES(?)");
 				pst.setInt(1, i);
 				pst.executeUpdate();
+			} catch (SQLException e) {
+				//e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -1095,7 +1096,7 @@ class DBConnector{
 
 	private static final String url = "jdbc:mysql://localhost:3306/nbd";
 	private static final String user = "root";
-	private static final String password = "root";
+	private static final String password = "";
 	public static Connection con = null;
 	private static Properties properties = new Properties();
 
