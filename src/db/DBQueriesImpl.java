@@ -885,6 +885,7 @@ public class DBQueriesImpl {
 					Lecturer lectur = getLecturerById(res.getInt(9));
 				schedule.setLecturer(lectur);
 				schedule.setGroup(res.getString(10));
+				schedules.add(schedule);
             }
 			for (Schedule schedule : schedules){
 				ArrayList<Week> weeks = getWeeksByScheduleId(schedule.getId());
