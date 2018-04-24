@@ -210,11 +210,12 @@ public class StudentController {
         }
 
         ArrayList<Schedule> scedule = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(null,null,spec,cours,disp);
+        ArrayList<Integer> errors = queries.getScheduleIdsWithErrors();
         DirectoryChooser chooser = new DirectoryChooser();
         File showDialog = chooser.showDialog(new Stage());
         String path = showDialog.getPath()+"/"+spec.getName()+".xlsx";
         if(scedule.size()>0)
-            StudentExport.export(spec,cours,scedule.get(1).getWeeks().get(0),scedule,path);
+            StudentExport.export(spec,cours,scedule.get(1).getWeeks().get(0),scedule,errors,path);
 
 
     }

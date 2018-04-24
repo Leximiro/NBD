@@ -201,10 +201,11 @@ public class LecturerController {
         Lecturer lect = queries.getLecturerByName(lecturerNameChoice.getSelectionModel().getSelectedItem());
         Week wee = queries.getWeekByNumber(weeksChoice.getSelectionModel().getSelectedItem());
         ArrayList<Schedule> schedules = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(lect,wee,null,null,null);
+        ArrayList<Integer> errors = queries.getScheduleIdsWithErrors();
         DirectoryChooser chooser = new DirectoryChooser();
         File showDialog = chooser.showDialog(new Stage());
         String path = showDialog.getPath()+"/"+lect.getName()+".xlsx";
-        LecturerExport.export(lect,wee,schedules,path);
+        LecturerExport.export(lect,wee,schedules,errors,path);
 
     }
 

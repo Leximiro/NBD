@@ -107,6 +107,8 @@ public class ExcelParser {
                                 0, false, false, false);
                         db.addClassroom(classroom);
                     }
+                } else {
+                    classroom = null;
                 }
 
                 Schedule schedule = new Schedule(year, classType.getName().equalsIgnoreCase("\u043b\u0435\u043a\u0446\u0456\u044f") ? null : groupCell,

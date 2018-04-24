@@ -2,6 +2,7 @@ package table;
 
 import entity.Schedule;
 import entity.Week;
+import parser.Utils;
 
 import java.util.ArrayList;
 
@@ -75,18 +76,8 @@ public class UploadTable {
         this.period = schedule.getPeriod().getNumber();
         this.classroom = schedule.getClassroom().getBuilding()+"-"+schedule.getClassroom().getNumber();
         this.classType = schedule.getClassType().getName();
-        this.weeks = extractWeeks(schedule.getWeeks());
+        this.weeks = Utils.getWeeks(schedule.getWeeks());
 
     }
-
-    private String extractWeeks(ArrayList<Week> weeks) {
-        StringBuilder res = new StringBuilder("");
-        for(Week w : weeks)
-            res.append(w.getNumber()+" ");
-        return res.toString();
-    }
-
-
-
 
 }

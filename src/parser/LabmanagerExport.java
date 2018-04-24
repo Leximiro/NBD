@@ -5,12 +5,10 @@ import entity.*;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -23,7 +21,7 @@ import java.util.HashSet;
 
 public class LabmanagerExport {
 
-    public static void export(Week week, ArrayList<Schedule> oldSchedules, String path){
+    public static void export(Week week, ArrayList<Schedule> oldSchedules, ArrayList<Integer> errors, String path){
 
         HashSet<Schedule> schedules = new HashSet<Schedule>();
         for (Schedule schedule : oldSchedules){
@@ -39,6 +37,16 @@ public class LabmanagerExport {
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setWrapText(true);
 
+        XSSFCellStyle errorStyle = workbook.createCellStyle();
+        errorStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        errorStyle.setAlignment(HorizontalAlignment.CENTER);
+        errorStyle.setWrapText(true);
+        XSSFFont font = workbook.createFont();
+        font.setBold(true);
+        errorStyle.setFont(font);
+        errorStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+        errorStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
         ArrayList<Period> periods = getPeriods(schedules);
         Collections.sort(periods, new PeriodSorter());
         ArrayList<Day> days = getDays(schedules);
@@ -49,38 +57,46 @@ public class LabmanagerExport {
         int rowNum = 0;
         Row row = sheet.createRow(rowNum);
         row.setRowStyle(style);
-        for (int t = 0; t < periods.size(); t++){
-            row.createCell(t + 2).setCellValue(periods.get(t).getNumber());
+        for (int t = 0; t < days.size(); t++){
+            row.createCell(t + 2).setCellValue(days.get(t).getName());
             row.getCell(t + 2).setCellStyle(style);
         }
-        for (int i = 0; i < classrooms.size(); i++){
-            sheet.addMergedRegion(new CellRangeAddress(rowNum + 1,rowNum + days.size(),0,0));
-            for (int j = 0; j < days.size(); j++){
+        for (int i = 0; i < periods.size(); i++){
+            sheet.addMergedRegion(new CellRangeAddress(rowNum + 1,rowNum + classrooms.size(),0,0));
+            for (int j = 0; j < classrooms.size(); j++){
                 row = sheet.createRow(++rowNum);
                 row.setRowStyle(style);
-                row.createCell(0).setCellValue(classrooms.get(i).getBuilding() + "-" + classrooms.get(i).getNumber());
+                row.createCell(0).setCellValue(periods.get(i).getNumber());
                 row.getCell(0).setCellStyle(style);
-                row.createCell(1).setCellValue(days.get(j).getName());
+                row.createCell(1).setCellValue(classrooms.get(j).getBuilding() + "-" + classrooms.get(j).getNumber());
                 row.getCell(1).setCellStyle(style);
-                for (int k = 0; k < periods.size(); k++){
+                for (int k = 0; k < days.size(); k++){
                     StringBuilder output = new StringBuilder();
+                    boolean error = false;
                     for (Schedule schedule : schedules){
-                        if (schedule.getClassroom().equals(classrooms.get(i)) && schedule.getDay().equals(days.get(j))
-                                && schedule.getPeriod().equals(periods.get(k))){
+                        if (schedule.getClassroom().equals(classrooms.get(j)) && schedule.getDay().equals(days.get(k))
+                                && schedule.getPeriod().equals(periods.get(i))){
+                            if (errors.contains(schedule.getId())){
+                                error = true;
+                            }
                             output.append(schedule.getLecturer().getDegree() + " " + schedule.getLecturer().getName() + "\n");
                             output.append(schedule.getDiscipline().getName() + "\n");
                             output.append(schedule.getClassType().getName().equalsIgnoreCase
-                                    ("\u043b\u0435\u043a\u0446\u0456\u044f") ?  schedule.getClassType().getName() + "\n" : "\u0413\u0440\u0443\u043f\u0430 " + schedule.getGroup() + "\n");
-                            output.append(schedule.getSpecialization().getName() + "-" + schedule.getYear() + "\n\n");
+                                    ("лекція") ?  schedule.getClassType().getName() + "\n" : "Група " + schedule.getGroup() + "\n");
+                            output.append(schedule.getSpecialization().getName() + "-" + schedule.getYear() + "\n");
+                            if (week == null){
+                                output.append("(" + Utils.getWeeks(schedule.getWeeks()) + ")" + "\n");
+                            }
+                            output.append("\n");
                         }
                     }
                     row.createCell(k + 2).setCellValue(output.toString());
-                    row.getCell(k + 2).setCellStyle(style);
+                    row.getCell(k + 2).setCellStyle(error ? errorStyle : style);
                 }
             }
         }
 
-        for (int i = 0; i < periods.size() + 2; i++){
+        for (int i = 0; i < days.size() + 2; i++){
             sheet.autoSizeColumn(i);
         }
 
@@ -119,21 +135,6 @@ public class LabmanagerExport {
             }
         }
         return result;
-    }
-
-    public static void main(String[] args) {
-        DBQueriesImpl queries = new DBQueriesImpl();
-        ArrayList<Schedule> schedules = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline
-                (null, null, null, null, null);
-        export(new Week(8, 8), schedules, "E:\\meport.xlsx");
-    }
-
-}
-
-class ClassroomSorter implements Comparator<Classroom> {
-
-    public int compare(Classroom one, Classroom another){
-        return (one.getBuilding() + "-" + one.getNumber()).compareTo(another.getBuilding() + "-" + another.getNumber());
     }
 
 }

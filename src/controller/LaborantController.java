@@ -252,11 +252,12 @@ public class LaborantController {
         }
         Integer buildings = buildingChoice.getSelectionModel().getSelectedItem();
         ArrayList<Schedule> schedules = queries.getScheduleByBuildingAndClassroomTypeAndClassroomNumber(buildings,boards,computer,projectors,null);
+        ArrayList<Integer> errors = queries.getScheduleIdsWithErrors();
         DirectoryChooser chooser = new DirectoryChooser();
         File showDialog = chooser.showDialog(new Stage());
         Week wee = queries.getWeekByNumber(1);
         String path = showDialog.getPath()+"/"+buildings+"schedule.xlsx";
-        LabmanagerExport.export(wee,schedules,path);
+        LabmanagerExport.export(wee,schedules,errors,path);
     }
 
     public void init(Controller controller) {

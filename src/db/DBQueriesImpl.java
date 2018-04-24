@@ -1095,7 +1095,7 @@ class DBConnector{
 
 	private static final String url = "jdbc:mysql://localhost:3306/nbd";
 	private static final String user = "root";
-	private static final String password = "";
+	private static final String password = "root";
 	public static Connection con = null;
 	private static Properties properties = new Properties();
 
