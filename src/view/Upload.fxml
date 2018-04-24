@@ -20,7 +20,7 @@
         <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="День" fx:id="dayError" />
         <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Період" fx:id="periodError" />
         <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Аудиторія" fx:id="classroomError" />
-        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="119.0" text="Тип аудиторії" fx:id="classTypeError" />
+        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="119.0" text="Тип заняття" fx:id="classTypeError" />
         <TableColumn prefWidth="120.0" text="Тижні" fx:id="weekNumberErrors" />
       </columns>
     </TableView>
@@ -32,6 +32,10 @@
       </items>
     </ToolBar>
     <Text fx:id="bdcounter" layoutY="67.0" scaleX="1.6324334108869984" scaleY="2.0015826331702464" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" AnchorPane.leftAnchor="50.0" />
-    <Label fx:id="wait" layoutY="54.0" prefHeight="21.0" prefWidth="129.0" text="Зачекайте будь-ласка" AnchorPane.rightAnchor="20.0" />
+    <Label fx:id="wait" layoutY="46.0" prefHeight="32.0" prefWidth="299.0" text="Зачекайте будь-ласка" AnchorPane.rightAnchor="227.0">
+      <font>
+        <Font size="20.0" />
+      </font>
+    </Label>
   </children>
 </AnchorPane>

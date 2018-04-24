@@ -15,7 +15,7 @@
         <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Аудиторія" fx:id="classroomLab" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="139.0" text="Понеділок" fx:id="mondayLab" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="143.0" text="Вівторок " fx:id="tuesdayLab" />
-        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="150.0" text="Серед " fx:id="wednesdayLab" />
+        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="150.0" text="Середа" fx:id="wednesdayLab" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="140.0" text="Четвер " fx:id="thursdayLab" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="126.0" text="П'ятниця " fx:id="fridayLab" />
         <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="117.0" text="Субота " fx:id="saturdayLab" />
@@ -31,6 +31,8 @@
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Проектор" />
         <ChoiceBox id="buildingChoice" fx:id="board" prefWidth="98.0" />
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Дошка" />
+        <ChoiceBox id="buildingChoice" fx:id="weeksLab" prefWidth="98.0" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Тижні" />
         <Button id="showClassroom" fx:id="classroomShowBtn" mnemonicParsing="false" onAction="#showTableLaborant" text="Показати" />
         <Button fx:id="downloadLab" mnemonicParsing="false" onAction="#downloadLabBtn" text="Завантажити" />
       </items>

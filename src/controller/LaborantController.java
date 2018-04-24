@@ -33,6 +33,8 @@ public class LaborantController {
     ChoiceBox<String> projector;
     @FXML
     ChoiceBox<String> board;
+    @FXML
+    ChoiceBox<Integer> weeksLab;
 
 
 
@@ -74,7 +76,15 @@ public class LaborantController {
     public void choiceBoxFill() {
         buildingChoice.getItems().clear();
 
+
         queries = new DBQueriesImpl();
+        ArrayList<Week> weeks = queries.getAllWeeks();
+        ObservableList<Integer> weeksFX = FXCollections.observableArrayList();
+        weeksFX.add(null);
+        for (Week week : weeks) {
+            weeksFX.add(week.getNumber());
+        }
+        weeksLab.setItems(weeksFX);
         ArrayList<Integer> buildings = queries.getAllBuildings();
         ObservableList<Integer> buildingsFX = FXCollections.observableArrayList();
         buildingsFX.add(null);
@@ -83,15 +93,15 @@ public class LaborantController {
         }
         buildingChoice.setItems(buildingsFX);
         ObservableList<String> computer = FXCollections.observableArrayList();
-        computer.add("\u0411\u0443\u0434\u044c-\u044f\u043a\u0456");
+        computer.add("\u0412\u0441\u0456");
         computer.add("\u0404");
         computer.add("\u041d\u0435\u043c\u0430\u0454");
         ObservableList<String> projectors = FXCollections.observableArrayList();
-        projectors.add("\u0411\u0443\u0434\u044c-\u044f\u043a\u0456");
+        projectors.add("\u0412\u0441\u0456");
         projectors.add("\u0404");
         projectors.add("\u041d\u0435\u043c\u0430\u0454");
         ObservableList<String> boards = FXCollections.observableArrayList();
-        boards.add("\u0411\u0443\u0434\u044c-\u044f\u043a\u0456");
+        boards.add("\u0412\u0441\u0456");
         boards.add("\u0404");
         boards.add("\u041d\u0435\u043c\u0430\u0454");
         computers.setItems(computer);
@@ -104,6 +114,7 @@ public class LaborantController {
     public void showTableLaborant(ActionEvent actionEvent) {
 
         Integer buildings = buildingChoice.getSelectionModel().getSelectedItem();
+        Integer weeks = weeksLab.getSelectionModel().getSelectedItem();
 
         ArrayList<Period> periods = queries.getAllPeriods();
         ArrayList<Classroom> classrooms = getClassroomsByBuilding(buildings);
@@ -114,6 +125,9 @@ public class LaborantController {
             for (Classroom classroom: classrooms) {
 
                 ArrayList<Schedule> schedules = sortByPeriod(period,classroomArrayListHashMap.get(classroom));
+                if(weeks!=null){
+                    schedules = weekFilter(weeks,schedules);
+                }
                 LaborantTable studTable = new LaborantTable(classroom,period,schedules);
                 laborantTables.add(studTable);
             }
@@ -121,6 +135,17 @@ public class LaborantController {
         laborantTable.setItems(laborantTables);
     }
 
+    private ArrayList<Schedule> weekFilter(Integer weeks,ArrayList<Schedule> schedules){
+        ArrayList<Schedule> sced = new ArrayList<>();
+        Week week = queries.getWeekByNumber(weeks);
+        for (Schedule schedule: schedules) {
+            if(schedule.getWeeks().contains(week)){
+                sced.add(schedule);
+            }
+        }
+
+        return sced;
+    }
     private ArrayList<Classroom> getClassroomsByBuilding(Integer buildings) {
         ArrayList<Schedule> schedule = queries.getScheduleByBuildingAndClassroomTypeAndClassroomNumber(buildings,null,null,null,null);
         HashSet<Classroom> classrooms = new HashSet<>();
@@ -215,6 +240,7 @@ public class LaborantController {
         Boolean computer = null;
         Boolean projectors = null;
         Boolean boards = null ;
+        Integer week = weeksLab.getSelectionModel().getSelectedItem();;
         try {
             if (computers.getSelectionModel().getSelectedItem().equals("\u0404")) {
                 computer = true;
@@ -255,8 +281,18 @@ public class LaborantController {
         ArrayList<Integer> errors = queries.getScheduleIdsWithErrors();
         DirectoryChooser chooser = new DirectoryChooser();
         File showDialog = chooser.showDialog(new Stage());
-        Week wee = queries.getWeekByNumber(1);
-        String path = showDialog.getPath()+"/"+buildings+"schedule.xlsx";
+        Week wee = null;
+        if(week!=null){
+            wee = queries.getWeekByNumber(week);
+            schedules = weekFilter(week,schedules);
+        }
+        String path ="";
+
+        try {
+            path = showDialog.getPath()+"/"+buildings+"schedule.xlsx";
+        }catch (NullPointerException e){
+            return;
+        }
         LabmanagerExport.export(wee,schedules,errors,path);
     }
 

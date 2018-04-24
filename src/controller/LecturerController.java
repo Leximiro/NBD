@@ -199,12 +199,23 @@ public class LecturerController {
 
     public void downloadLecturer(ActionEvent actionEvent) {
         Lecturer lect = queries.getLecturerByName(lecturerNameChoice.getSelectionModel().getSelectedItem());
-        Week wee = queries.getWeekByNumber(weeksChoice.getSelectionModel().getSelectedItem());
+        Week wee = null;
+        try {
+            wee = queries.getWeekByNumber(weeksChoice.getSelectionModel().getSelectedItem());
+        }catch (NullPointerException e){
+
+        }
         ArrayList<Schedule> schedules = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(lect,wee,null,null,null);
         ArrayList<Integer> errors = queries.getScheduleIdsWithErrors();
         DirectoryChooser chooser = new DirectoryChooser();
         File showDialog = chooser.showDialog(new Stage());
-        String path = showDialog.getPath()+"/"+lect.getName()+".xlsx";
+        String path ="";
+
+        try {
+            path = showDialog.getPath()+"/"+lect.getName()+".xlsx";
+        }catch (NullPointerException e){
+            return;
+        }
         LecturerExport.export(lect,wee,schedules,errors,path);
 
     }

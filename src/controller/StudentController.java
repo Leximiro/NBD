@@ -6,10 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
@@ -213,7 +210,13 @@ public class StudentController {
         ArrayList<Integer> errors = queries.getScheduleIdsWithErrors();
         DirectoryChooser chooser = new DirectoryChooser();
         File showDialog = chooser.showDialog(new Stage());
-        String path = showDialog.getPath()+"/"+spec.getName()+".xlsx";
+        String path ="";
+
+        try {
+            path = showDialog.getPath()+"/"+spec.getName()+".xlsx";
+        }catch (NullPointerException e){
+            return;
+        }
         if(scedule.size()>0)
             StudentExport.export(spec,cours,scedule.get(1).getWeeks().get(0),scedule,errors,path);
 
