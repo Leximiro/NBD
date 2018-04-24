@@ -6,10 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -85,7 +82,6 @@ public class LecturerController {
         queries = new DBQueriesImpl();
         ArrayList<Lecturer> lecturers = queries.getAllLecturers();
         ObservableList<String> lecturersFX = FXCollections.observableArrayList();
-        lecturersFX.add(null);
         for (Lecturer lecturer : lecturers) {
             lecturersFX.add(lecturer.getName());
         }
@@ -134,12 +130,19 @@ public class LecturerController {
     public void showButtonCLicked(ActionEvent event){
         ArrayList<Period> periods = queries.getAllPeriods();
         HashMap<Period,ArrayList<Schedule>> dayArrayListHashMap = initHashMap();
+        if(lecturerNameChoice.getSelectionModel().getSelectedItem()==null){
+            Alert alert = new Alert(Alert.AlertType.NONE,"\u041d\u0435\u043e\u0431\u0445\u0456\u0434\u043d\u043e \u0432\u0438\u0431\u0440\u0430\u0442\u0438 \u0432\u0438\u043a\u043b\u0430\u0434\u0430\u0447\u0430", ButtonType.OK);
+            alert.setTitle("\u041e\u0431\u0435\u0440\u0456\u0442\u044c \u0432\u0438\u043a\u043b\u0430\u0434\u0430\u0447\u0430");
+            alert.showAndWait();
+            return;
+        }
 
         lecturerTables.clear();
 
 
         lecturerTable.setItems(lecturerTables);
         for (Period period: periods) {
+            System.out.println(dayArrayListHashMap.get(period));
             LecturerTable lectTable = new LecturerTable(period, dayArrayListHashMap.get(period));
             lecturerTables.add(lectTable);
         }
@@ -181,7 +184,6 @@ public class LecturerController {
         catch (NullPointerException e) {
             ;
         }
-
         ArrayList<Schedule> scedule = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(lect,wee,spec,cours,disp);
         ArrayList<Period> periods = queries.getAllPeriods();
         HashMap<Period,ArrayList<Schedule>> dayScheduleHashMap = new HashMap<>();
@@ -191,6 +193,7 @@ public class LecturerController {
 
         for (Schedule schedule: scedule) {
             Period period = schedule.getPeriod();
+
             dayScheduleHashMap.get(period).add(schedule);
         }
 

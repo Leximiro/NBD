@@ -76,7 +76,6 @@ public class StudentController {
         queries = new DBQueriesImpl();
         ArrayList<Specialization> specs = queries.getAllSpecializations();
         ObservableList<String> specFX = FXCollections.observableArrayList();
-        specFX.add(null);
         for (Specialization spec : specs) {
             specFX.add(spec.getName());
         }
@@ -117,9 +116,14 @@ public class StudentController {
         queries = new DBQueriesImpl();
         ArrayList<Period> periods = queries.getAllPeriods();
         HashMap<Period,ArrayList<Schedule>> dayArrayListHashMap = initHashMap();
-        System.out.println(studentTables);
+        if(specChoiceStudent.getSelectionModel().getSelectedItem()==null){
+            Alert alert = new Alert(Alert.AlertType.NONE,"\u041d\u0435\u043e\u0431\u0445\u0456\u0434\u043d\u043e \u0432\u0438\u0431\u0440\u0430\u0442\u0438 \u0441\u043f\u0435\u0446\u0456\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c", ButtonType.OK);
+            alert.setTitle("\u041e\u0431\u0435\u0440\u0456\u0442\u044c \u0441\u043f\u0435\u0446\u0456\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c");
+            alert.showAndWait();
+            return;
+        }
+
         studentTables.clear();
-        System.out.println(studentTables);
 
         studentTable.setItems(studentTables);
         for (Period period: periods) {
@@ -164,7 +168,6 @@ public class StudentController {
         }
 
         ArrayList<Schedule> scedule = queries.getScheduleByLecturerAndWeekAndSpecAndCourseAndDiscipline(null,wee,spec,cours,disp);
-        System.out.println(scedule);
         ArrayList<Period> periods = queries.getAllPeriods();
         for (Period period : periods) {
             dayScheduleHashMap.put(period,new ArrayList<Schedule>());
